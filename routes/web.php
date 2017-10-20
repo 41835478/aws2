@@ -97,3 +97,9 @@ Route::get('uses.locking',function(){
 });
 
 
+require_once base_path('routes/home2/wxPay.php');//微信支付
+require_once base_path('routes/home2/alipay.php');//支付宝支付
+require_once base_path('routes/home2/shop.php');//商城首页路由
+require_once base_path('routes/home2/info.php');//商城文章页,我的账户路由-------【这里面有锁定用户操作的路由组】
+
+
