@@ -25,7 +25,7 @@ class AuthService
         $method = openssl_get_cipher_methods();
         $value = serialize($data);
         $date['iv'] = base64_encode(substr($this->iv, 0, 16));
-        $date['value'] = openssl_encrypt($value, $method[1], $this->userIdKey, 0, base64_decode($date['iv']));
+        $date['value'] = openssl_encrypt($value, $method[16], $this->userIdKey, 0, base64_decode($date['iv']));
         $encrypt = base64_encode(json_encode($date));
         return $encrypt;
     }
@@ -33,9 +33,12 @@ class AuthService
     public function rememberDecrypt($data)//用户id解密
     {
         $method = openssl_get_cipher_methods();
+
         $encrypt = json_decode(base64_decode($data), true);
         $iv = base64_decode($encrypt['iv']);
-        $tokenDeOpenssl = openssl_decrypt($encrypt['value'], $method[1], $this->userIdKey, 0, $iv);
+
+        $tokenDeOpenssl = openssl_decrypt($encrypt['value'], $method[16], $this->userIdKey, 0, $iv);
+
         $decrypt = unserialize($tokenDeOpenssl);
         if($decrypt){
             return $decrypt;
