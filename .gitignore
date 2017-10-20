@@ -1,3 +1,9 @@
 
 sftp-config.json
 sftp-config.json
+public/app/uploads/
+public/images/
+public/lay/headimg/
+public/ueditor/php/upload/
+public/uploads/
+.user.ini
