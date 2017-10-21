@@ -26,9 +26,7 @@ class LockMiddleware
     public function handle($request, Closure $next)
     {
         if($request->session()->has('home_user_id')){
-
             $user_id=$this->auth->rememberDecrypt(\Session::get('home_user_id'));
-
             $user=User::find($user_id);
             if($user->locking==2){//说明是未锁定可以继续其他操作
                 return $next($request);

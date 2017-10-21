@@ -68,6 +68,32 @@
                         </li>
                     </ul>
                 </li>
+                <li class="line dk"></li>
+                <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                    <span class="ng-scope">众筹专区</span>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table"></i> <span class="nav-label">商品管理</span><span
+                                class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="{{url('admin2/goods/index')}}">添加商品</a>
+                        </li>
+                        <li><a class="J_menuItem" href="{{url('admin2/goods/goodsList')}}">众筹商品列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">订单管理</span><span
+                                class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="{{url('admin2/order/index')}}">订单列表</a>
+                    </ul>
+
+                </li>
+                <li class="line dk"></li>
+                <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                    <span class="ng-scope">用户专区</span>
+                </li>
                 <li>
                     <a href="#">
                         <i class="fa fa-user"></i>
@@ -279,6 +305,7 @@
                         <li><a class="J_menuItem" href="{{url('menu/menuList')}}">微信菜单列表</a>
                     </ul>
                 </li>
+
             </ul>
         </div>
     </nav>

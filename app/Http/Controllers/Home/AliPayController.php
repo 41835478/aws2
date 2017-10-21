@@ -31,8 +31,9 @@ class AliPayController extends Controller
         $this->rowCommonService=$rowCommonService;
     }
 
-    public function index(Request $request,$order_id=0)
-    {
+    public function index($order_id=0)
+    {   
+        dd(1);
         if($order_id){
             $id=$order_id;
         }else{

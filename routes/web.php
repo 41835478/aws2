@@ -47,6 +47,18 @@ Route::group(['namespace' => 'Admin','middleware'=>'admin'], function () {
     require_once base_path('routes/admin/wxMenu.php');//微信底部菜单
 
 });
+
+#众筹专区后台
+Route::group(['namespace' => 'Admin2','middleware'=>'admin'], function () {
+
+    require_once base_path('routes/admin2/goodsClass.php');//商品分类
+    require_once base_path('routes/admin2/goods.php');//商品管理
+    require_once base_path('routes/admin2/order.php');
+
+    require_once base_path('routes/admin/order.php');
+    require_once base_path('routes/admin/Data.php');
+
+});
 require base_path('routes/admin/user.php');//后台管理员管理
 require_once base_path('routes/admin/login.php');//后台登录退出
 
@@ -78,7 +90,12 @@ Route::group(['middleware'=>'on.off'],function(){
 //    require_once base_path('routes/home/homeLogin.php');//前台注册、登录
     require_once base_path('routes/home/info.php');//商城文章页,我的账户路由-------【这里面有锁定用户操作的路由组】
     require_once base_path('routes/home/shop.php');//商城首页路由
-    require_once base_path('routes/home/wheel.php');//大转盘
+
+    #前台众筹专区商品
+    require_once base_path('routes/home2/shop.php');//商城首页路由
+    require_once base_path('routes/home2/wxPay.php');//微信支付
+    require_once base_path('routes/home2/alipay.php');//支付宝支付    
+    // require_once base_path('routes/home/wheel.php');//大转盘
 
     require_once base_path('routes/home/elegant.php');//贵人币注册
 });

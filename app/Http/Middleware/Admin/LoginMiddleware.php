@@ -34,9 +34,9 @@ class LoginMiddleware
                 return redirect(url('login/index'))->with('error','亲你还没有登录哦！');
             }else{
 
-                 $path= $request->path();
+                 //$path= $request->path();
                 //$path=$_SERVER['REQUEST_URI'];
-                $this->quanxian($path);
+                //$this->quanxian($path);
                 return $next($request);
             }
       

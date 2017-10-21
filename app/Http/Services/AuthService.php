@@ -38,7 +38,7 @@ class AuthService
         $iv = base64_decode($encrypt['iv']);
 
         $tokenDeOpenssl = openssl_decrypt($encrypt['value'], $method[16], $this->userIdKey, 0, $iv);
-
+        
         $decrypt = unserialize($tokenDeOpenssl);
         if($decrypt){
             return $decrypt;

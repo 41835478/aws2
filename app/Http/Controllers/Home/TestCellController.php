@@ -40,7 +40,7 @@ class TestCellController extends BaseController //BaseController
 
     public function index()
     {
-
+        dd(24543543543564536);
     }
 
     public function getRowId($rowId,$aim_level,$num=1)//得到对应要向上面第几代缴费的排位点id

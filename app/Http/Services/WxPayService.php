@@ -14,11 +14,11 @@ class WxPayService
     //查询订单的真实性
     public function wxorderquery($transaction_id){
         $data = array();
-        $data['appid'] = config('home.APPID');
-        $data['mch_id'] = config('home.MCH_ID');
+        $data['appid'] = config('home2.APPID');
+        $data['mch_id'] = config('home2.MCH_ID');
         $data['nonce_str'] = time().rand(10000,99999);
         $data['transaction_id'] = $transaction_id;
-        $sign = $this->getSign($data,config('home.KEY'));
+        $sign = $this->getSign($data,config('home2.KEY'));
         $xmlStr = '<xml>
 			<appid><![CDATA['.$data['appid'].']]></appid>
 			<mch_id><![CDATA['.$data['mch_id'].']]></mch_id>
