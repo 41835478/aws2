@@ -34,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ActiveLogEvent' => [
             'App\Listeners\ActiveLogEventListener',
         ],
+        'App\Events\DistributionEvent' => [ //分销
+            'App\Listeners\DistributionEventListener',
+        ],
     ];
 
     /**
