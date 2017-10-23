@@ -14,14 +14,15 @@ class DistributionEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public  $data = [];
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data = [])
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -31,6 +32,6 @@ class DistributionEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('distribution-event');
     }
 }
