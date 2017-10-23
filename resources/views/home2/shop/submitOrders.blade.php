@@ -116,7 +116,7 @@
 	</div>
 </footer>
 <script type="text/javascript">
-	$('.submitAddress-con').on('touchend',function(){
+	$('.submitAddress-con').on('click',function(){
 		if(confirm('是否更换地址？')){
 			window.location.href='/users/shippingaddress?gh=1';
 		}

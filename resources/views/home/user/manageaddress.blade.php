@@ -39,7 +39,7 @@
 <body>
 <div class="public_head" style="background-color:#fff">
 	<h3 style="color:#333">管理收货地址</h3>
-	<a style="color:#333" href="javascript:history.go(-1);location.reload()" class="iconfont icon-fanhui"></a>
+	<a style="color:#333" href="javascript:history.go(-1);" class="iconfont icon-fanhui"></a>
 </div>
 <div class="content">
 	<ul class="addressBox">

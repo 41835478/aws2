@@ -52,8 +52,41 @@
 <div class="content">
    <!--  编辑 -->
 	<div class="cart_edit" >
+<!-- 		<div class="cart_single">
+			<div class="cart_single_head" >
+				<i class="cart_zc cart_he cart_i iconfont icon-weixuanzhong"></i>
+				<p>众筹商品</p>
+				<i class="iconfont icon-xiala zc-xl"></i>
+				<p class="cart_po"><em class="">1</em>件</p>
+			</div>
+			@foreach ($zccart as $v)
+			<div class="zc_single">
+				<div class="cart_single_cont cart_single_contzc" cart_id="{{ $v->id }}" data-type="zc">
+					<i class="cart_zc1 cart_i cart_f iconfont icon-weixuanzhong"></i>
+					<img onclick="javascript:window.location.href='/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
+					<div class="cart_bj" >
+						<div class="cart_single_box">
+							<p class="cart_pt">{{ $v->goods->name }}</p>
+							<p class="cart_ps"><span>￥</span><em class="cart_univalent">{{ $v->goods->price }}</em></p>
+						</div>
+						<p class="cart_pn">x<em class="cart_num">{{ $v->num }}</em></p>
+					</div>
+					<div class="cart_wc" style="display: none;">
+						<div class="cart_finish_box">
+							<div class="cart_finish_btnbox">
+								<input type="button" value="-" class="jian">
+								<input type="text" value="{{ $v->num }}" cart_id="{{ $v->id }}" class="cart_ber">
+								<input type="button" value="+" class="add">
+							</div>
+							<p class="cart_ps"><span>￥</span><em class="cart_univalent">{{ $v->goods->price }}</em></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			@endforeach
+		</div> -->
 		<div class="cart_single">
-			<div class="cart_single_head">
+			<div class="cart_single_head" >
 				<i class="cart_cd cart_he cart_i iconfont icon-weixuanzhong"></i>
 				<p>排单商品</p>
 				<i class="iconfont icon-xiala pai_xl"></i>
@@ -62,7 +95,7 @@
 			@foreach ($cart as $v)
 				@if	($v->type == 1)
 			<div class="pai_single">
-				<div class="cart_single_cont cart_single_conto" cart_id="{{ $v->id }}">
+				<div class="cart_single_cont cart_single_conto" cart_id="{{ $v->id }}" data-type="pd">
 					<i class="cart_d cart_i cart_f iconfont icon-weixuanzhong"></i>
 					<img onclick="javascript:window.location.href='/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
 					<div class="cart_bj" >
@@ -88,7 +121,7 @@
 			@endforeach
 		</div>
 		<div class="cart_single">
-			<div class="cart_single_head">
+			<div class="cart_single_head" data-id="">
 				<i class="cart_cn cart_he cart_i iconfont icon-weixuanzhong"></i>
 				<p>普通商品</p>
 				<i class="iconfont icon-xiala pu_xl"></i>
@@ -97,7 +130,7 @@
 			<div class="pu_single">
 				@foreach ($cart as $v)
 					@if	($v->type == 2)
-				<div class="cart_single_cont cart_single_contt" cart_id="{{ $v->id }}">
+				<div class="cart_single_cont cart_single_contt" cart_id="{{ $v->id }}" data-type="pt">
 					<i class="cart_n cart_i cart_f iconfont icon-weixuanzhong"></i>
 					<img onclick="javascript:window.location.href='/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
 					<div class="cart_bj" style="display: block">
@@ -120,7 +153,6 @@
 				</div>
 					@endif
 				@endforeach
-
 		</div>
 		<div class="cart_foot cart_footo">
 			<i class="cart_all iconfont icon-weixuanzhong"></i>
@@ -160,6 +192,10 @@
     $(".pai_xl").on("click",function(){
     	$(this).toggleClass("icon-shang")
     	$(".pai_single").slideToggle();
+    })
+    $('.zc-xl').on("click",function(){
+    	$(this).toggleClass("icon-shang")
+    	$(".zc_single").slideToggle();
     })
     $(".pu_xl").on("click",function(){
     	$(this).toggleClass("icon-shang")
@@ -244,14 +280,18 @@
             return false;
         }
         var xz_arr = '';
+        var xz_type = '';
         for(var i = 0;i < xz.length;i++){
             xz_arr += ','+xz[i].attributes[1].value;
+            xz_type += ','+xz[i].attributes[2].value;
+
         }
+        xz_type = xz_type.substr(1);
         xz_arr = xz_arr.substr(1);
 
 		$.ajax({
 			'url':"{{url('shop/judgeLimitPay')}}",
-			'data':{'cart_id':xz_arr},
+			'data':{'cart_id':xz_arr,'car_type':xz_type},
 			'type':'get',
 			'async':true,
 			'dataType':'html',
@@ -314,6 +354,14 @@
 	   $(".cart_fom").html(len);    
 	   
     })
+    //众筹
+    $(".cart_zc1").on("click",function(){
+    	if ($('.cart_zc1').length == $('.icon-selected').length) {
+	        $('.cart_zc').addClass('icon-xuanzhong');
+	    } else {
+	        $('.cart_zc').removeClass('icon-xuanzhong');
+	    };
+    })
     $(".cart_d").on("click",function(){
     	if ($('.cart_d').length == $('.icon-selected').length) {
 	        $('.cart_cd').addClass('icon-xuanzhong');
@@ -354,6 +402,52 @@
     	}
     	
     })
+    //排单全选
+    $(".cart_zc").on("click",function(){
+    	if($(this).hasClass("icon-selected")){
+    		$(".cart_zc1").addClass("icon-selected");
+    		var len=$(".icon-selected:not(.cart_he)").length;
+    		$(".cart_fom").html(len);
+    		var zh=[];var number=[];var mon=[];
+	        var zj=$(".icon-selected:not(.cart_he)").map(function(){
+		          var dj=$(this).siblings().children().find(".cart_univalent").html();
+		          var num=$(this).siblings().children().find(".cart_num").html();
+		          var count=dj * num;
+		          zh.push(dj)
+		          number.push(num);
+		          mon.push(count)
+	       })
+	       var counts=eval(mon.join('+'));
+	       counts=counts.toFixed(2);
+	       $(".cart_mount").html(counts);
+    	}else{
+    		$(".cart_zc1").removeClass("icon-selected");
+    		var len=$(".icon-selected:not(.cart_he)").length;
+    		$(".cart_fom").html(len);
+    		var zh=[];var number=[];var mon=[];
+	        var zj=$(".icon-selected:not(.cart_he)").map(function(){
+		          var dj=$(this).siblings().children().find(".cart_univalent").html();
+		          var num=$(this).siblings().children().find(".cart_num").html();
+		          var count=dj * num;
+		          zh.push(dj)
+		          number.push(num);
+		          mon.push(count)
+	       })
+	       var counts=eval(mon.join('+'));
+	       if (!counts) {
+	          counts = "0.00";
+	       } else {
+	        counts=counts.toFixed(2);
+	       }
+	       $(".cart_mount").html(counts);
+    	}
+    	if ($('.cart_i').length == $('.icon-selected:not(.cart_he)').length) {
+	        $('.cart_all').addClass('icon-xuanzhong');
+	    } else {
+	        $('.cart_all').removeClass('icon-xuanzhong');
+	    };
+    })
+
     //排单全选
     $(".cart_cd").on("click",function(){
     	if($(this).hasClass("icon-selected")){

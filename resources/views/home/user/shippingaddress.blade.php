@@ -31,7 +31,7 @@
 <body>
 <div class="public_head">
 	<h3>选择收货地址</h3>
-	<a href="javascript:" onclick="self.location=history.go(-1);" class="iconfont icon-fanhui"></a>
+	<a href="javascript:history.go(-1)" class="iconfont icon-fanhui"></a>
 
 
 	@if($dizhi == 1)
@@ -45,7 +45,7 @@
 <ul class="addressBox">
 
 	@foreach($address as $v)
-	<li class="submitAddress" onclick="addressEdit({{ $v['id'] }})">
+	<li class="submitAddress" data-id="{{ $v['id'] }}" onclick="addressEdit({{ $v['id'] }})" >
 		<div class="submit_consignee">
 			<p class="div_left">{{$v['name']}}</p>
 			<p class="div_right">{{$v['phone']}}</p>
@@ -70,7 +70,6 @@
 <script type="text/javascript">
 function addressEdit(id){
 	let gh = location.search.split('=')[1];
-
 	if(gh == 1){
 		$.ajax({
 			url : '/users/addressEdit',
@@ -82,7 +81,23 @@ function addressEdit(id){
 		})
 	}
 }
-// $('.submitAddress').on('click',function(){
+// $('.submitAddress').on('click touchend',function(){
+// 	var id = $(this).data('id');
+
+// 	let gh = location.search.split('=')[1];
+// 	if(gh == 1){
+// 		$.ajax({
+// 			url : '/users/addressEdit',
+// 			type : 'post',
+// 			data : {id:id},
+// 			success : function(res){
+// 				alert(document.referrer);
+// 				return false;
+// 				self.location=document.referrer;
+// 			}
+// 		})
+// 	}
+// });
 // 	// var con = $(this).find('.submitAddress-con .con').text();
 // 	// localStorage.setItem('addressCon',con);
 // 	// console.log(localStorage.getItem('addressCon'));

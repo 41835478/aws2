@@ -81,8 +81,8 @@
 </div>
 <footer class="footer">
 	<div class="goodsBtns">
-        <button type="button" class="jionCar">加入购物车</button>
-        <button id="purchase" type="button">立即购买</button>
+        <!-- <button type="button" class="jionCar">加入购物车</button> -->
+        <button id="purchase" type="button" style="width: 100%">立即购买</button>
     </div>
 </footer>
 <script type="text/javascript" src="/home/js/handlebars-1.0.0.beta.6.js"></script>
@@ -146,21 +146,21 @@
     $('#purchase').on('click',function(){
         var goods_id = {{ $goods->id }}
         var num = $('#goods_num').text();
-        $.ajax({
-            'url':"{{url('shop/judgeLimitPay')}}",
-            'data':{'num':num,'goods_id':goods_id},
-            'type':'get',
-            'async':true,
-            'dataType':'html',
-            success:function(res){
-                if(res==501){
-                    alert('该专区商品每天只能限购10次');
-                }else{
-                    window.location.href='/shop/submitOrders?goods_id='+goods_id+'&num='+num;
-                }
-            }
-        })
-        window.location.href='shop/submitOrders?goods_id='+goods_id+'&num='+num;
+        // $.ajax({
+        //     'url':"{{url('home2/shop/judgeLimitPay')}}",
+        //     'data':{'num':num,'goods_id':goods_id},
+        //     'type':'get',
+        //     'async':true,
+        //     'dataType':'html',
+        //     success:function(res){
+        //         if(res==501){
+        //             alert('该专区商品每天只能限购10次');
+        //         }else{
+        //             window.location.href='/shop/submitOrders?goods_id='+goods_id+'&num='+num;
+        //         }
+        //     }
+        // })
+        window.location.href='/home2/shop/submitOrders?goods_id='+goods_id+'&num='+num;
     })
 </script>
 </body>

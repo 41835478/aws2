@@ -33,9 +33,7 @@ Route::group(['namespace' => 'Admin','middleware'=>'admin'], function () {
 
     require_once base_path('routes/admin/order.php');
     require_once base_path('routes/admin/Data.php');
-
     require_once base_path('routes/admin/admin_wheel.php');//幸运转盘管理
-
     require_once base_path('routes/admin/withdraw.php');//提现管理
     require_once base_path('routes/admin/direct.php');//分销管理
     require_once base_path('routes/admin/row.php');//公排管理
@@ -50,13 +48,11 @@ Route::group(['namespace' => 'Admin','middleware'=>'admin'], function () {
 
 #众筹专区后台
 Route::group(['namespace' => 'Admin2','middleware'=>'admin'], function () {
-
     require_once base_path('routes/admin2/goodsClass.php');//商品分类
     require_once base_path('routes/admin2/goods.php');//商品管理
     require_once base_path('routes/admin2/order.php');
+    require_once base_path('routes/admin2/Data.php');
 
-    require_once base_path('routes/admin/order.php');
-    require_once base_path('routes/admin/Data.php');
 
 });
 require base_path('routes/admin/user.php');//后台管理员管理

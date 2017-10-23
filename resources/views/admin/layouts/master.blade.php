@@ -90,6 +90,15 @@
                     </ul>
 
                 </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">众筹数据</span><span
+                                class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="{{url('admin2/data/index')}}">数据统计</a>
+                        <li><a class="J_menuItem" href="{{url('admin2/data/configindex')}}">参数配置</a>
+                    </ul>
+
+                </li>
                 <li class="line dk"></li>
                 <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                     <span class="ng-scope">用户专区</span>
