@@ -1,1 +1,1 @@
-<?php/** * Created by PhpStorm. * User: Administrator * Date: 2017/10/23 * Time: 15:44 */namespace App\Http\Model;use Illuminate\Database\Eloquent\Model;class BalanceRecord2 extends Model{    protected $table = 'balanceRecords2';}
+<?php/** * Created by PhpStorm. * User: Administrator * Date: 2017/10/23 * Time: 15:44 */namespace App\Http\Model;use Illuminate\Database\Eloquent\Model;class BalanceRecord2 extends Model{    protected $table = 'balance_records2';}
