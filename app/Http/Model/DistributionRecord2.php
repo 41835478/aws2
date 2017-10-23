@@ -1,0 +1,1 @@
+<?php/** * Created by PhpStorm. * User: Administrator * Date: 2017/10/23 * Time: 15:54 */namespace App\Http\Model;use Illuminate\Database\Eloquent\Model;class DistributionRecord2 extends Model{    protected $table = 'distribution_records2';    protected $fillable = ['from_id','to_id','num','info'];}
