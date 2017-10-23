@@ -35,9 +35,11 @@ class ShopController extends Controller{
         #查询用户信息
         $lunbo = DB::table(self::LUNBO)->where(['type'=>1,'status'=>0])->get();    //轮播图
         $goods = DB::table(self::GOODS)->orWhereIn('type',['4','5','6'])->where(['status'=>1])->get();
+        $zcgoods = DB::table('goods2')->where(['status'=>1])->get();
         $return = [
             'lunbo'=>$lunbo,
-            'goods'=>$goods
+            'goods'=>$goods,
+            'zcgoods'=>$zcgoods
         ];
 
   
@@ -69,8 +71,13 @@ class ShopController extends Controller{
         foreach($cart as $k=>$v){
             $cart[$k]->goods = DB::table(self::GOODS)->where(['id'=>$v->goods_id])->first();
         }
+        $zccart = DB::table('goodscart2')->where(['user_id'=>$user_id])->get()->toArray();
+        foreach($zccart as $k=>$v){
+            $zccart[$k]->goods = DB::table('goods2')->where(['id'=>$v->goods_id])->first();
+        }
         $return = [
-            'cart'=>$cart
+            'cart'=>$cart,
+            'zccart'=>$zccart
         ];
         return view('home.shop.cart',$return);
     }

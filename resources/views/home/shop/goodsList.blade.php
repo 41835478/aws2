@@ -40,7 +40,7 @@
                 <ul class="div_displayFlex goods_yin">
                     @foreach ($goods as $k=>$v)
                         <li class="div_borderBox indexgoodsList">
-                            <a href="/home2/shop/goodsDetail?id={{ $v->id }}" class="a_jump">
+                            <a href="/shop/goodsDetail?id={{ $v->id }}" class="a_jump">
                                 <img class="div_borderBox indexGoodsimg" src="{{ asset($v->pic) }}" alt=""/>
                                 <div class="index_price">
                                     <p class="index_con">{{ $v->name }}</p>

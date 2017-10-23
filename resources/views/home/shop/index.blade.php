@@ -78,15 +78,35 @@
                 <img src="{{asset('home/images/indexNav08.png')}}" alt=""/>
                 <span>积分商城</span>
             </a>
-            <a href="/home2/shop/goodsList" class="a_jump">
+<!--             <a href="/home2/shop/goodsList" class="a_jump">
                 <img src="{{asset('home/images/indexNav11.png')}}" alt=""/>
                 <span>众筹专区</span>
-            </a>
+            </a> -->
         </div>
     </div>
     <div style="height:12px;border-bottom:1px solid #e6e6e6"></div>
     <!-- goodsDetail -->
     <div class="index_goods">
+         <div class="index_goodsDetail">
+            <div class="div_clearFloat index_goodsTitle" style="border-top:0">
+                <img src="{{asset('home/images/100.png')}}" alt="">
+            </div>
+            <div class="index_goodsBox">
+                <ul class="div_displayFlex goods_yin">
+                    @foreach ($zcgoods as $k=>$v)
+                        <li class="div_borderBox indexgoodsList">
+                            <a href="/home2/shop/goodsDetail?id={{ $v->id }}" class="a_jump">
+                                <img class="div_borderBox indexGoodsimg" src="{{ asset($v->pic) }}" alt=""/>
+                                <div class="index_price">
+                                    <p class="index_con">{{ $v->name }}</p>
+                                    <p class="index_priceCon">￥{{ $v->price }}</p>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+    </div>
          <div class="index_goodsDetail">
             <div class="div_clearFloat index_goodsTitle" style="border-top:0">
                 <img src="{{asset('home/images/100.png')}}" alt=""/>

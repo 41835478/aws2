@@ -35,6 +35,7 @@ class ShopController extends Controller{
         #查询用户信息
         $lunbo = DB::table(self::LUNBO)->where(['type'=>1,'status'=>0])->get();    //轮播图
         $goods = DB::table(self::GOODS)->orWhereIn('type',['4','5','6'])->where(['status'=>1])->get();
+        $zcgoods = DB::table(self::GOODS)->orWhereIn('type',['4','5','6'])->where(['status'=>1])->get();
         $return = [
             'lunbo'=>$lunbo,
             'goods'=>$goods
@@ -90,11 +91,6 @@ class ShopController extends Controller{
         $insert['user_id'] = $user_id;
         $insert['create_at'] = time();
         $goods = DB::table(self::GOODS)->where(['id'=>$insert['goods_id']])->first();
-        if(in_array($goods->type,[4,5,6])){
-            $insert['type'] = 1;
-        }else{
-            $insert['type'] = 2;
-        }
         $insert['price'] = round($insert['num'] * $goods->price,2);
         $res = DB::table(self::CART)->where(['user_id'=>$insert['user_id'],'goods_id'=>$insert['goods_id']])->first();
         if($res){

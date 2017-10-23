@@ -52,7 +52,7 @@
 <div class="content">
    <!--  编辑 -->
 	<div class="cart_edit" >
-		<div class="cart_single">
+<!-- 		<div class="cart_single">
 			<div class="cart_single_head">
 				<i class="cart_cd cart_he cart_i iconfont icon-weixuanzhong"></i>
 				<p>排单商品</p>
@@ -64,7 +64,7 @@
 			<div class="pai_single">
 				<div class="cart_single_cont cart_single_conto" cart_id="{{ $v->id }}">
 					<i class="cart_d cart_i cart_f iconfont icon-weixuanzhong"></i>
-					<img onclick="javascript:window.location.href='/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
+					<img onclick="javascript:window.location.href='/home2/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
 					<div class="cart_bj" >
 						<div class="cart_single_box">
 							<p class="cart_pt">{{ $v->goods->name }}</p>
@@ -86,7 +86,7 @@
 			</div>
 				@endif
 			@endforeach
-		</div>
+		</div> -->
 		<div class="cart_single">
 			<div class="cart_single_head">
 				<i class="cart_cn cart_he cart_i iconfont icon-weixuanzhong"></i>
@@ -99,7 +99,7 @@
 					@if	($v->type == 2)
 				<div class="cart_single_cont cart_single_contt" cart_id="{{ $v->id }}">
 					<i class="cart_n cart_i cart_f iconfont icon-weixuanzhong"></i>
-					<img onclick="javascript:window.location.href='/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
+					<img onclick="javascript:window.location.href='/home2/shop/goodsDetail?id={{ $v->goods_id }}'" src="{{ asset($v->goods->pic) }}" alt="">
 					<div class="cart_bj" style="display: block">
 						<div class="cart_single_box">
 							<p class="cart_pt">{{ $v->goods->name }}</p>
@@ -191,7 +191,7 @@
 	})
     function cartEdit(id,num){
         $.ajax({
-			url : '/shop/cartEdit',
+			url : '/home2/shop/cartEdit',
 			type : 'get',
 			data : {
 			    id : id,
@@ -219,7 +219,7 @@
 	        xz_arr += ','+xz[i].attributes[1].value;
 		}
         $.ajax({
-            url : '/shop/cartDel',
+            url : '/home2/shop/cartDel',
             type : 'get',
             data : {
                 xz_arr : xz_arr,
@@ -250,7 +250,7 @@
         xz_arr = xz_arr.substr(1);
 
 		$.ajax({
-			'url':"{{url('shop/judgeLimitPay')}}",
+			'url':"{{url('home2/shop/judgeLimitPay')}}",
 			'data':{'cart_id':xz_arr},
 			'type':'get',
 			'async':true,
@@ -259,12 +259,12 @@
 				if(res==501){
 					alert('该专区商品每天只能限购10次');
 				}else{
-					location.href="/shop/submitOrders?cart_id="+xz_arr;
+					location.href="/home2/shop/submitOrders?cart_id="+xz_arr;
 				}
 			}
 		})
 
-        location.href="/shop/submitOrders?cart_id="+xz_arr;
+        location.href="/home2/shop/submitOrders?cart_id="+xz_arr;
 	}
 	 //编辑
     $(".right").click(function(){ 

@@ -220,7 +220,7 @@ $(".present_centt").on("click", function (){
 			var order_id = location.search.split('=')[1];
 			if(is_kingkr_obj()){
 				$.ajax({
-					'url':'{{url("home2/wxAppPay/sendRequest")}}',
+					'url':'{{url("wxAppPay/sendRequest")}}',
 					'data':{'id':order_id},
 					'async':true,
 					'type':'get',
@@ -246,7 +246,7 @@ $(".present_centt").on("click", function (){
 			var order_id = location.search.split('=')[1];
 			if(is_kingkr_obj()){
 				$.ajax({
-					'url':'{{url("home2/wxAppPay/sendRequest")}}',
+					'url':'{{url("wxAppPay/sendRequest")}}',
 					'data':{'id':order_id},
 					'async':true,
 					'type':'get',
@@ -260,7 +260,7 @@ $(".present_centt").on("click", function (){
 					}
 				})
 			}else{
-				window.location.href="{{config('home.WEB')}}"+"/home2/wxpay/index?order_id="+order_id;
+				window.location.href="{{config('home.WEB')}}"+"/wxpay/index?order_id="+order_id;
 			}
 		}else if(type == '余额支付'){
 			$(".kuang").show();
@@ -327,7 +327,7 @@ $(".present_centt").on("click", function (){
     function order_pay(password){
     	var order_id = location.search.split('=')[1];
     	$.ajax({
-    		url : '/home2/shop/order_pay',
+    		url : '/shop/order_pay',
     		type : 'post',
     		data : {
     			order_id : order_id,
@@ -340,7 +340,7 @@ $(".present_centt").on("click", function (){
     				alert('密码错误');
     			}else{
     				alert('支付成功');
-    				window.location.href = '/home2/shop/paySuccess';
+    				window.location.href = '/shop/paySuccess';
     			}
     		}
     	})
@@ -350,7 +350,7 @@ $(".present_centt").on("click", function (){
 	{
 		var order_id = location.search.split('=')[1];
 		$.ajax({
-			url:'{{url("home2/shop/recash_point")}}',
+			url:'{{url("/shop/recash_point")}}',
 			type:'post',
 			data:{'order_id':order_id,'password':password,'_token':"{{csrf_token()}}"},
 			success:function(data){
@@ -362,7 +362,7 @@ $(".present_centt").on("click", function (){
 					alert('复投积分不足');
 				}else{
 					alert('支付成功');
-					window.location.href = '/home2/shop/paySuccess';
+					window.location.href = '/shop/paySuccess';
 				}
 			},
 			error:function(){
