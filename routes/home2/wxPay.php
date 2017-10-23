@@ -1,5 +1,6 @@
 <?php
 Route::group(['namespace'=>'Home2'],function() {
+    // dd(1);
     Route::any('wxpay/index/{order_id?}/{openid?}', 'WxPayController@index');//发起微信支付
     Route::get('wxpay/getOpenId/{id}', 'WxPayController@getOpenId');//获取openid
     Route::any('callBack/paynotify', 'CallBackController@paynotify');//微信回调地址

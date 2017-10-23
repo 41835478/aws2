@@ -93,7 +93,7 @@
         var goods_id = "{{ $goods->id }}"
         var num = $('#goods_num').text();
         $.ajax({
-            url : '/shop/addCart',
+            url : '/home2/shop/addCart',
             type : 'get',
             data : {
                 goods_id : goods_id,
@@ -147,7 +147,7 @@
         var goods_id = {{ $goods->id }}
         var num = $('#goods_num').text();
         $.ajax({
-            'url':"{{url('home2/shop/judgeLimitPay')}}",
+            'url':"{{url('shop/judgeLimitPay')}}",
             'data':{'num':num,'goods_id':goods_id},
             'type':'get',
             'async':true,
@@ -156,11 +156,11 @@
                 if(res==501){
                     alert('该专区商品每天只能限购10次');
                 }else{
-                    window.location.href='/home2/shop/submitOrders?goods_id='+goods_id+'&num='+num;
+                    window.location.href='/shop/submitOrders?goods_id='+goods_id+'&num='+num;
                 }
             }
         })
-        window.location.href='/home2/shop/submitOrders?goods_id='+goods_id+'&num='+num;
+        window.location.href='shop/submitOrders?goods_id='+goods_id+'&num='+num;
     })
 </script>
 </body>

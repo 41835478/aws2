@@ -27,6 +27,7 @@ class WxPayController extends BaseController
             $sendUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . config('home2.APPID') . '&redirect_uri=' . $url . '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
             return redirect($sendUrl);
         }
+
         $tokenUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . config('home2.APPID') . '&secret=' . config('home2.SECRET') . '&code=' . $code . '&grant_type=authorization_code';
         $access_token_contents = $this->https_request($tokenUrl);
         $access_token = json_decode($access_token_contents, true);

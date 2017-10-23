@@ -8,7 +8,7 @@ Route::group(['namespace'=>'Home2'],function(){
     Route::get('home2/shop/paySuccess','ShopController@paySuccess');  //支付完成
 
 //    Route::get('shop','ShopController@index');//商城首页
-   Route::get('/hoem2/shop/cart','ShopController@cart');     //购物车---------需登录
+   Route::get('/home2/shop/cart','ShopController@cart');     //购物车---------需登录
     Route::get('/home2/shop/addCart','ShopController@addCart');   //加入购物车------需登录
    Route::get('/home2/shop/cartEdit','ShopController@cartEdit'); //购物车修改 ------需登录
    Route::get('/home2/shop/cartDel','ShopController@cartDel'); //购物车删除 ------需登录
