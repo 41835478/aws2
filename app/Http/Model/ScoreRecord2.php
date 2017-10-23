@@ -1,1 +1,1 @@
-<?php/** * Created by PhpStorm. * User: Administrator * Date: 2017/10/23 * Time: 15:47 */namespace App\Http\Model;use Illuminate\Database\Eloquent\Model;class ScoreRecord2 extends  Model{    protected $table = 'score_records2';}
+<?php/** * Created by PhpStorm. * User: Administrator * Date: 2017/10/23 * Time: 15:47 */namespace App\Http\Model;use Illuminate\Database\Eloquent\Model;class ScoreRecord2 extends  Model{    protected $table = 'score_records2';    protected $fillable = ['user_id','type','is_add','num','info'];}
