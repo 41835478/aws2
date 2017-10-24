@@ -112,7 +112,7 @@ class DistributionEventListener
                         if ($res) {
                             $res1 = $this->accountRecordService->setAccountRecord($upUser->id, $userIncome, BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, $level . '代分销奖金', 1);
                             if ($res1) {
-                                $res2 = $upUser->increment('dynamic_income', $userIncome);
+                                $res2 = $upUser->increment('balance', $userIncome);
                                 if ($res2) {
                                     \Log::info($level . '级返佣成功');
                                     event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,]));
