@@ -48,7 +48,7 @@
 <div class="content" style="padding-top:48px;padding-bottom:0">
 	<div class="bonus">
 		<h2>
-			<span>&yen;</span><em>2000.00</em><span style="color:#114e7c">（已封顶）</span>
+			<span>&yen;</span><em>{{$countMoney}}</em><span style="color:#114e7c">（已封顶）</span>
 		</h2>
 		<p>今日收益</p>
 	</div>
@@ -110,6 +110,7 @@
 <script type="text/javascript">
 	$('.myPartner').on('click',function(){
 		var _t = $(this).index();
+		_t = _t+1;
 		window.location.href = "{{url('users/loverleader2')}}?type="+_t;
 	});
 </script>

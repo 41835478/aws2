@@ -1263,22 +1263,104 @@ try{
 
     #爱心领导奖
     public function loverleader()
-    {
-        return view('home.user.loverleader',compact(''));
+    {   
+        $user_id=$this->checkUser();
+        $countMoney = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>2])->sum('num');
+        #未判断是否封顶
+        return view('home.user.loverleader',compact('countMoney'));
     }
 
-    #爱心领导奖
+    #爱心领导奖几代
     public function loverleader2()
     {
-        $type = $_GET['type'] ? $type = $_GET['type'] : $type = 1;
+        $type = $_GET['type'];
         $data = [];
         return view('home.user.loverleader2',compact('type','data'));
     }
 
     #我的团队
     public function myTeam_new()
-    {
-        return view('home.user.myTeam_new');
+    {   
+        $user_id=$this->checkUser();
+        $count = count($this->child([$user_id],[]));   
+        if ($count) {
+            $one = count($this->getChilden([$user_id],1));
+            $two = count($this->getChilden([$user_id],2));
+            $three = count($this->getChilden([$user_id],3));
+            $other = $count - $one - $two - $three;
+        }else{
+            $one = 0;
+            $two = 0;
+            $three = 0;
+            $other = 0;
+        }
+        return view('home.user.myTeam_new',compact('one','two','three','other','count'));
 
     }
+
+    #团队列表
+    public function teamList()
+    {
+        $user_id=$this->checkUser();
+
+        $type = $_GET['type'];  //团队几级
+        
+        if ((int)$type > 3) {
+            $id = $this->getChilden([$user_id],1);  
+        }else{
+            $id = $this->getChilden([$user_id],$type);  
+        }
+
+        if (!empty($id)) {
+            $data = DB::table('user')->whereIn('pid',$id)->get();
+        }else{
+            $data = [];
+        }
+        return view('home.user.teamList',compact('type','data'));
+    }
+
+    /**
+     * 获取指定级别下级
+     * @param $uid char 要查询下级的用户集合id；如[1,2,3]
+     * @param $num int   要查询的级别
+     * @return 查询级别的用户下级
+     */
+    public function getChilden($uid,$num = 1){
+        $user1 = DB::table('user')->whereIn('pid',$uid)->select('id','pid')->get();
+        $user1 = json_decode(json_encode($user1),true);
+
+        $users_id = [];
+        foreach($user1 as $k=>$v){
+            $users_id[] = $v['id'];
+        }
+
+        for($i = 1;$i < $num;$i++){
+            if(!$users_id){
+                return $users_id;
+            }
+            $users_id = $this->getChilden($users_id,$num-1);
+            return $users_id;
+        }
+        return $users_id;
+    }
+
+    #查询无限下级用户id
+    #$id []
+    public function child($id,$data = [])
+    {   
+        $user1 = DB::table('user')->whereIn('pid',$id)->pluck('id');
+        $user1 = json_decode(json_encode($user1),true);
+        if ($user1) {
+            $allUser = [];
+            foreach ($user1 as $k => $v) {
+                $data[] = $v;
+                $allUser[] = $v;
+            }
+            $data = $this->child($allUser,$data);
+        }else{
+            $data = array_merge($user1,$data);
+        }
+            return $data;
+    }
+
 }

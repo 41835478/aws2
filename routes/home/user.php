@@ -64,6 +64,7 @@
     Route::get('users/loverleader','UserController@loverleader');//爱心领导奖
     Route::get('users/loverleader2','UserController@loverleader2');//爱心领导奖详情
     Route::get('users/myTeam_new','UserController@myTeam_new');//我的团队
+    Route::get('users/teamList','UserController@teamList');//团队列表
 
 
 

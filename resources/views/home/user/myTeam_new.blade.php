@@ -46,7 +46,7 @@
 <div class="content" style="padding-top:48px;padding-bottom:0">
 	<div class="bonus">
 		<h2>
-			<em>300</em>
+			<em>{{$count}}</em>
 		</h2>
 		<p>团队人数</p>
 	</div>
@@ -56,24 +56,24 @@
 				<img src="/home/images/huang01.png" alt="图标"/>
 				<span>一级小伙伴</span>
 				<i class="iconfont icon-you"></i>
-				<p class="div_right">30人</p>
+				<p class="div_right">{{$one}}人</p>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang02.png" alt="图标"/>
 				<span>二级小伙伴</span>
 				<i class="iconfont icon-you"></i>
-				<p class="div_right">30人</p>
+				<p class="div_right">{{$two}}人</p>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang03.png" alt="图标"/>
 				<span>三级小伙伴</span>
 				<i class="iconfont icon-you"></i>
-				<p class="div_right">30人</p>
+				<p class="div_right">{{$three}}人</p>
 			</li>
 			<li class="teamnum-list">
 				<img src="/home/images/huang04.png" alt="图标"/>
 				<span>更多小伙伴</span>
-				<p class="div_right">210人</p>
+				<p class="div_right">{{$other}}人</p>
 			</li>
 		</ul>
 	</div>
@@ -81,7 +81,8 @@
 <script type="text/javascript">
 	$('.myPartner').on('click',function(){
 		var _t = $(this).index();
-		window.location.href = "{{url('users/loverleader2')}}?type="+_t;
+		_t = _t +1;
+		window.location.href = "{{url('users/teamList')}}?type="+_t;
 	});
 </script>
 </body>
