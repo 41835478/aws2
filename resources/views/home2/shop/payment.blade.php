@@ -41,7 +41,7 @@
 </div>
 <div class="public_head" style="background-color:#fff">
 	<h3 style="color:#333">支付</h3>
-	<a style="color:#333" href="javascript:history.go(-1);location.reload()" class="iconfont icon-fanhui"></a>
+	<a style="color:#333" href="javascript:history.go(-1);" class="iconfont icon-fanhui"></a>
 </div>
 <div class="content" style="padding-bottom:50px">
 	<div class="pay_orderAmount">

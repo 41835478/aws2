@@ -83,7 +83,7 @@
         <input style="margin:0;border:0;height:60px;line-height: 60px;" type="number" placeholder="短信验证码" name="code" class="code num"><button id="code" type="button" class="yzbtn" >获取验证码</button>
 
   </div>
-		<em>注：最低提现额度为50元，预留20%进入复投积分，预留10%进入消费积分。每天9点到下午5五点审核，1到7个工作日到账
+		<em>注：最低提现额度为50元，10%作为平台维护费 15%作为消费积分
     </em>
 
 

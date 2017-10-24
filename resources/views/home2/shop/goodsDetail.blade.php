@@ -128,7 +128,7 @@
     //加减
     $('.goodsNumselect').find('.icon-jia').on('click',function(){
         var a = parseInt($(this).siblings('span').text());
-        if(a >= 5){ return;}
+        // if(a >= 5){ return;}
         a++;
         $(this).siblings('span').text(a);
     });

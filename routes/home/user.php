@@ -1,6 +1,7 @@
 <?php
 
 	Route::get('users/index','UserController@index');//用户主页
+
 	Route::get('users/myaccount','UserController@myaccount');//账户信息
 	Route::get('users/turnaccount','UserController@turnaccount');//余额转账
 	Route::get('users/withdrawals','UserController@withdrawals');//账户体现
@@ -53,6 +54,19 @@
 
 	Route::get('users/balance','UserController@balance');//余额充值记录
     Route::get('users/mynumcount','UserController@mynumcount');//我的团队人数
+
+    #三次开发路由
+    Route::get('users/crowdfunding','UserController@crowdfunding');//众筹奖金
+    Route::get('users/loverDetail','UserController@loverDetail');//爱心值明细
+    Route::get('users/loverBonus','UserController@loverBonus');//爱心奖金
+    Route::get('users/stockBonus','UserController@stockBonus');//股东分红
+    Route::get('users/loverDistribution','UserController@loverDistribution');//爱心分销奖
+    Route::get('users/loverleader','UserController@loverleader');//爱心领导奖
+    Route::get('users/loverleader2','UserController@loverleader2');//爱心领导奖详情
+    Route::get('users/myTeam_new','UserController@myTeam_new');//我的团队
+
+
+
 
     Route::group(['middleware'=>'qrcode'],function(){
         Route::get('users/qrcode','UserController@qrcode');//用户二维码

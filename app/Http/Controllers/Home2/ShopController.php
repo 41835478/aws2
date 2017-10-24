@@ -367,10 +367,10 @@ class ShopController extends Controller{
         $account['type'] = 2;
         DB::table('incomerecode')->insert($account);
         $userDb=DB::table('user')->where(['id'=>$user_id])->first();
-        if($userDb->level!=1){
-            DB::table('user')->where(['id'=>$user_id])->update(['level'=>1]);
-        }
-        $this->rowCommonService->index($order->id);
+        // if($userDb->level!=1){
+        //     DB::table('user')->where(['id'=>$user_id])->update(['level'=>1]);
+        // }
+        // $this->rowCommonService->index($order->id);
         echo 1;
     }
 

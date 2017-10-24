@@ -25,6 +25,7 @@
     body{
         background-color:#f5f5f5;
     }
+    .zhongMore{height:42px;line-height: 42px;font-size: 12px;color:#999999;text-align: center;border-top:1px solid #e6e6e6;width:106.5%;position:relative;left:-3.2%;}
 </style>
 </head>
 <body>
@@ -88,11 +89,11 @@
     <!-- goodsDetail -->
     <div class="index_goods">
          <div class="index_goodsDetail">
-            <div class="div_clearFloat index_goodsTitle" style="border-top:0">
-                <img src="{{asset('home/images/100.png')}}" alt="">
+            <div class="div_clearFloat index_goodsTitle" style="border-top:2px solid #2194eb">
+               <img src="{{asset('home/images/zhongchou.png')}}" alt=""/>
             </div>
             <div class="index_goodsBox">
-                <ul class="div_displayFlex goods_yin">
+                <ul class="div_displayFlex goods_zhong">
                     @foreach ($zcgoods as $k=>$v)
                         <li class="div_borderBox indexgoodsList">
                             <a href="/home2/shop/goodsDetail?id={{ $v->id }}" class="a_jump">
@@ -105,8 +106,9 @@
                         </li>
                     @endforeach
                 </ul>
+                <p class="zhongMore">查看更多&gt;&gt;</p>
             </div>
-    </div>
+        </div>
          <div class="index_goodsDetail">
             <div class="div_clearFloat index_goodsTitle" style="border-top:0">
                 <img src="{{asset('home/images/100.png')}}" alt=""/>
@@ -198,6 +200,18 @@
 </footer>
 <script type="text/javascript" src="{{asset('home/js/handlebars-1.0.0.beta.6.js')}}"></script>
 <script type="text/javascript" src="{{asset('home/js/index.js')}}"></script>
- 
+<script type="text/javascript">
+    /*点击查看更多*/
+    var len = $('.goods_zhong li').length;
+    $('.goods_zhong li:gt(3)').css('display','none');
+    $('.zhongMore').on('click',function(){
+        if(len<=4){
+             $('.zhongMore').text('没有更多了~');
+        }else{
+             $('.goods_zhong li:gt(3)').show(300);
+             $('.zhongMore').text('没有更多了~');
+        }
+    })
+</script>   
 </body>
 </html>

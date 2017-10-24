@@ -68,8 +68,47 @@
 				
 			</li>
 			@endforeach
-			
-		
+			<!-- 新增四个收入 -->
+		<!-- <li class="act_list">
+			<img src="images/red01.png" alt="">
+			<div class="act_class">
+				<p class="top_p">十月股东分红</p>
+				<p class="time">2017-03-22 12:35</p>
+			</div>
+			<div class="act_money">
+				+¥<span>1000.00</span>
+			</div>
+		</li>
+		<li class="act_list">
+			<img src="images/red02.png" alt="">
+			<div class="act_class">
+				<p class="top_p">爱心奖金</p>
+				<p class="time">2017-03-22 12:35</p>
+			</div>
+			<div class="act_money">
+				+¥<span>168.00</span>
+			</div>
+		</li>
+		<li class="act_list">
+			<img src="images/red03.png" alt="">
+			<div class="act_class">
+				<p class="top_p">爱心分销奖</p>
+				<p class="time">2017-03-22 12:35</p>
+			</div>
+			<div class="act_money">
+				+¥<span>1000.00</span>
+			</div>
+		</li>
+		<li class="act_list">
+			<img src="images/red04.png" alt="">
+			<div class="act_class">
+				<p class="top_p">爱心领导奖</p>
+				<p class="time">2017-03-22 12:35</p>
+			</div>
+			<div class="act_money">
+				+¥<span>10.00</span>
+			</div>
+		</li> -->
 			
 		
 		</ul>
@@ -106,7 +145,17 @@
 				</div> -->
 			</li>
 			@endforeach
-			
+			<!-- 支出1箱 -->
+			<!-- <li class="act_list">
+				<img src="images/red05.png" alt="">
+				<div class="act_class">
+					<p class="top_p">众筹消费</p>
+					<p class="time">2017-03-22 12:35</p>
+				</div>
+				<div class="act_money">
+					-¥<span>2100.00</span>
+				</div>
+			</li> -->
 		</ul>
 	</div>
 </div>

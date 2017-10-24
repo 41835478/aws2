@@ -56,7 +56,7 @@
                                     @endif
                                 </td>
                                 <td>{{$v->price}} 元</td>
-                                <td>{{$v->sale}} 元</td>
+                                <td>{{$v->sale}} </td>
                                 <td>
                                     @if($v->status==1)
                                         <b style="color:green">上线</b> | <b style="color:#ccc;cursor:pointer" class="down">下线</b>

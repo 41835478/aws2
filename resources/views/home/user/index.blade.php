@@ -6,9 +6,9 @@
  @include('home.public.header')
 
 <style>
-	body{
-		background-color:#f5f5f5;
-	}
+	body{background-color:#f5f5f5;}
+	.center_navCon>.a_jump>span.span-new{padding-top:5px;}
+	.center_navCon>.a_jump>img.img-new{width:35%;}
 </style>
 </head>
 <body>
@@ -41,9 +41,13 @@
 			<p>￥{{$users['account']}}</p>
 			<span>账户余额(元)</span>
 		</div>
-		<div class="center_money">
+		<!-- <div class="center_money">
 			<p>{{$countt}}</p>
 			<span>我的团队(人)</span>
+		</div> -->
+		<div class="center_money">
+			<p>{{$love}}</p>
+			<span>我的爱心值</span>
 		</div>
 	</div>
 </div>
@@ -73,46 +77,27 @@
 				</a>
 			</div>
 		</div>
-		<ul class="centerList centerList3">
-			<li class="centerItem">
+		<div class="center_nav " style="padding:20px 0">
+			<div class="div_displayFlex center_navCon">
 				<a href="{{url('users/myaccount')}}" class="a_jump">
-					<img src="{{asset('home/images/person01.png')}}" alt=""/>
-					<span>我的账户</span>
-					<i class="iconfont icon-you"></i>
+					<img class="img-new" src="{{asset('home/images/iconh01.png')}}" alt=""/>
+					<span class="span-new">我的账户</span>
 				</a>
-			</li>
-		
-			<li class="centerItem">
 				<a href="{{url('users/myintegral')}}" class="a_jump">
-					<img src="{{asset('home/images/person02.png')}}" alt=""/>
-					<span>我的积分</span>
-					<i class="iconfont icon-you"></i>
+					<img class="img-new" src="{{asset('home/images/iconh02.png')}}" alt=""/>
+					<span class="span-new">我的积分</span>
 				</a>
-			</li>
-			<li class="centerItem">
 				<a href="{{url('users/mybonus')}}" class="a_jump">
-					<img src="{{asset('home/images/person03.png')}}" alt=""/>
-					<span>我的奖金</span>
-					<i class="iconfont icon-you"></i>
+					<img class="img-new" src="{{asset('home/images/iconh03.png')}}" alt=""/>
+					<span class="span-new">公排奖金</span>
 				</a>
-			</li>
-
-		</ul>
-		<ul class="centerList centerList3">
-			<li class="centerItem">
-			<a href="{{url('users/balance')}}" class="a_jump">
-					<img src="{{asset('home/images/person01.png')}}" alt=""/>
-					<span>充值记录</span>
-					<i class="iconfont icon-you"></i>
-			</a>
-			</li>
-			<li class="centerItem">
-				<a href="{{url('users/jifenshengji')}}" class="a_jump">
-					<img src="{{asset('home/images/person04.png')}}" alt=""/>
-					<span>积分升级</span>
-					<i class="iconfont icon-you"></i>
+				<a href="{{url('users/crowdfunding')}}" class="a_jump">
+					<img class="img-new" src="{{asset('home/images/iconh04.png')}}" alt=""/>
+					<span class="span-new">众筹奖金</span>
 				</a>
-			</li>
+			</div>
+		</div>
+		<ul class="centerList centerList1">
 			<li class="centerItem">
 				<a href="{{url('users/ranking_orders')}}" class="a_jump">
 					<img src="{{asset('home/images/person04.png')}}" alt=""/>
@@ -130,14 +115,14 @@
 				</a>
 			</li>
 			<li class="centerItem">
-				<a href="{{url('users/myteam')}}" class="a_jump">
+				<a href="{{url('users/myTeam_new')}}" class="a_jump">
 					<img src="{{asset('home/images/person06.png')}}" alt=""/>
 					<span>我的团队</span>
 					<i class="iconfont icon-you"></i>
 				</a>
 			</li>
 		</ul>
-		<ul class="centerList centerList2">
+		<ul class="centerList centerList3">
 			<li class="centerItem">
 				<a href="{{url('users/accountbinding')}}" class="a_jump">
 					<img src="{{asset('home/images/person07.png')}}" alt=""/>
@@ -146,27 +131,9 @@
 				</a>
 			</li>
 			<li class="centerItem">
-				<a href="{{url('users/shippingaddress')}}" class="a_jump">
+				<a href="{{asset('home/images/person08.png')}}" class="a_jump">
 					<img src="{{asset('home/images/person08.png')}}" alt=""/>
 					<span>收货地址</span>
-					<i class="iconfont icon-you"></i>
-				</a>
-			</li>
-		</ul>
-		<!-- person_b -->
-		<ul class="centerList centerList2">
-			<li class="centerItem"> 
-
-
-		@if($users['level']==1)
-		<a href="{{url('users/qrcode')}}" class="a_jump ">
-			@else
-		<a href="javascript:void(0);" class="a_jump person_b">
-		@endif	
-
-
-					<img src="{{asset('home/images/person09.png')}}" alt=""/>
-					<span>二维码</span>
 					<i class="iconfont icon-you"></i>
 				</a>
 			</li>
@@ -178,7 +145,20 @@
 				</a>
 			</li>
 		</ul>
-		<ul style="margin-bottom:0" class="centerList centerList1">
+		<!-- person_b -->
+		<ul class="centerList centerList2" style="margin-bottom:0">
+			<li class="centerItem"> 
+
+		@if($users['level']==1)
+		<a href="{{url('users/qrcode')}}" class="a_jump ">
+			@else
+		<a href="javascript:void(0);" class="a_jump person_b">
+		@endif	
+					<img src="{{asset('home/images/person09.png')}}" alt=""/>
+					<span>二维码</span>
+					<i class="iconfont icon-you"></i>
+				</a>
+			</li>
 			<li class="centerItem">
 				<a href="javascript:void(0);" class="a_jump person_aa" >
 					<img src="{{asset('home/images/person13.png')}}" alt=""/>

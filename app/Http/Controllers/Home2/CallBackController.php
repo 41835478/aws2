@@ -35,6 +35,7 @@ class CallBackController extends Controller
                 $order=Order::where(['order_code'=>strval($result['out_trade_no'])])->first();//修改订单
                 if($order&&$order->status==1){
                     #处理逻辑
+                    
                 }else{
                     echo 'success';
                 }

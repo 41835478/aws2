@@ -399,6 +399,7 @@ class AliPayController extends Controller
                 if($order && $order->status==1 && ($total_amount==0.01)) {
                     #处理逻辑
                     if(Order::where(['order_code'=>$out_trade_no])->update(['status'=>2])){
+                        
                         return redirect(url('users/index'));
                     };
 

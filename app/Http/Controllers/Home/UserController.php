@@ -119,8 +119,9 @@ class UserController  extends BaseController
         //     event(new AcoutEvent($uid));
         // }
 
+        $love = DB::table('order2')->where(['user_id'=>$uid])->where('status','>=','2')->sum('total_money');    
 
-        return view('home.user.index',compact('users','pusers','countt'));
+        return view('home.user.index',compact('users','pusers','countt','love'));
     }
 
 
@@ -1224,6 +1225,60 @@ try{
             return redirect('/');
         }
     }
-       
 
+
+    #众筹奖金
+    public function crowdfunding()
+    {   
+        $user_id=$this->checkUser();
+
+        $love = DB::table('order2')->where(['user_id'=>$user_id])->where('status','>=',2)->sum('total_money');
+        $count = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>1])->sum('num');
+        return view('home.user.crowdfunding',compact('love','count'));
+    }   
+
+    #众筹奖金
+    public function loverDetail()
+    {
+        return view('home.user.loverDetail',compact(''));
+    }    
+
+    #股东分红
+    public function stockBonus()
+    {
+        return view('home.user.stockBonus',compact(''));
+        
+    }
+    #爱心奖金
+    public function loverBonus()
+    {
+        return view('home.user.loverBonus',compact(''));
+    }
+
+    #爱心分销奖
+    public function loverDistribution()
+    {
+        return view('home.user.loverDistribution',compact(''));
+    }
+
+    #爱心领导奖
+    public function loverleader()
+    {
+        return view('home.user.loverleader',compact(''));
+    }
+
+    #爱心领导奖
+    public function loverleader2()
+    {
+        $type = $_GET['type'] ? $type = $_GET['type'] : $type = 1;
+        $data = [];
+        return view('home.user.loverleader2',compact('type','data'));
+    }
+
+    #我的团队
+    public function myTeam_new()
+    {
+        return view('home.user.myTeam_new');
+
+    }
 }
