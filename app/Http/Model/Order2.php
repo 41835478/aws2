@@ -26,4 +26,9 @@ class Order2 extends Model
      {
          return $value;
      }
+
+    public function investment()
+    {
+        return $this->hasOne(Investment2::class,'order_id','id');
+     }
 }

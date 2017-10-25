@@ -24,6 +24,11 @@ class User extends Model
         return $users;
     }
 
+    public function investments()
+    {
+        return $this->hasMany(Investment2::class,'user_id','id');
+    }
+
 
 
 
