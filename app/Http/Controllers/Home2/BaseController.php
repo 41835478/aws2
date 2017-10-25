@@ -44,6 +44,10 @@ class BaseController extends Controller
     {
         return $this->msg->sendMsg($phone);
     }
+
+
+
+
     /**
      * @param $phone
      * @return bool  发送注册短信验证码

@@ -66,6 +66,7 @@
     Route::get('users/myTeam_new','UserController@myTeam_new');//我的团队
     Route::get('users/teamList','UserController@teamList');//团队列表
 
+	Route::get('users/createqrcode1','UserController@createqrcode1');//生成二维码
 
 
 

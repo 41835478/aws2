@@ -37,8 +37,6 @@ class DataController extends Controller
         // 众筹股东分红
         // 众筹累计收入
         // 众筹累计分红金额
-
-        // var_dump($memberz);die;
         return view('admin.data2.index',compact('orders','lingdao','fenxiao'));
     }
 
