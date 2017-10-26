@@ -56,13 +56,33 @@ class UserController  extends BaseController
         $uid=$this->checkUser();
         $t = new User;
         $users = $t->getuserinfo($uid); 
-
-         // var_dump($users['pic']);die;  
+        if (mb_strlen($users->name,'utf8') <=3) {
+            $users->name = '　 '.$users->name;
+        }
         if($users['level'] != 1){
         	 return redirect('users/index');
         }                       
-        return view('home.user.qrcode',compact('users'));
+        return view('home.user.Qrcode_new',compact('users'));
 	}
+
+    public function createqrcode1(){
+        $uid=$this->checkUser(); 
+        ob_clean();  
+
+       //   header("Access-Control-Allow-Origin: www.tjzbdkj.com");
+
+        include base_path()."/phpqrcode.php";  
+        $object = new \ QRcode();
+        $url = 'http://'.$_SERVER['HTTP_HOST'].'/register/index1/'.$uid;//网址或者是文本内容
+        $level=3;
+        $size=4;
+        $errorCorrectionLevel =intval($level) ;//容错级别
+        $matrixPointSize = intval($size);//生成图片大小       
+         $object->png($url, false, $errorCorrectionLevel, $matrixPointSize, 2); 
+
+        DIE();
+   
+    }
 
 
     public function createqrcode(){
@@ -81,7 +101,6 @@ class UserController  extends BaseController
          $object->png($url, false, $errorCorrectionLevel, $matrixPointSize, 2); 
 
         DIE();
-   
     }
 
 
@@ -1251,8 +1270,11 @@ try{
     }
     #爱心奖金
     public function loverBonus()
-    {
-        return view('home.user.loverBonus',compact(''));
+    {   
+        $user_id=$this->checkUser();
+        $data = DB::table('investments2')->where('user_id',$user_id)->get();
+        $count = DB::table('investments2')->where('user_id',$user_id)->sum('give_money');
+        return view('home.user.loverBonus',compact('count','data'));
     }
 
     #爱心分销奖
@@ -1304,7 +1326,6 @@ try{
         $user_id=$this->checkUser();
 
         $type = $_GET['type'];  //团队几级
-        
         if ((int)$type > 3) {
             $id = $this->getChilden([$user_id],1);  
         }else{
@@ -1312,7 +1333,7 @@ try{
         }
 
         if (!empty($id)) {
-            $data = DB::table('user')->whereIn('pid',$id)->get();
+            $data = DB::table('user')->whereIn('id',$id)->get();
         }else{
             $data = [];
         }

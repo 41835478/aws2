@@ -48,8 +48,10 @@ class OrderController extends Controller
                 
                 $query->where('status',$input['status']);
             }
+            if($request->has('type')){
                 
-            
+                $query->where('type',$input['type']);
+            }            
             
         $orderclass = $query->select(['*'])->orderby('id','desc')->paginate(config('admin.pages'));
             foreach ($orderclass as $key => $value) {

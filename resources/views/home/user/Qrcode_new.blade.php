@@ -44,9 +44,13 @@
         </div>
 <script type="text/javascript">
     var data={
-        "name":"CR小杀",
-        "image":["images/qrhead2.png","images/Qrbg2.png","images/QR.png"]
+        "name":"{{$users['name']}}",
+        "image":["{{$users['pic']}}","/home/images/Qrbg2.png","{{url('users/createqrcode1')}}"]
         },imgPath;
+        $(".person_c").on("click",function(){
+            addBox("body");
+            outBoxx("查看个人中心需先下载APP在APP端进行查看，是否现在下载？","personalCenter.html");
+         })    
     // $.ajax({
     //     url : 'http://ht.xtwhjy.com/home/user/myScanCode',
     //     dataType:'jsonp',
@@ -73,14 +77,15 @@ function draw(){
     var len=data.image.length;
     mycanvas.width=screen.width;
     mycanvas.height=screen.height;
-    // 文字
-       var left0 = screen.width * 0.43;
+      // 文字
+       var left0 = screen.width * 0.35;
+       var right0 = screen.width * 0.35;
        var top0 = screen.height * 0.315;
        // 头像
        var left1 = screen.width * 0.39;
        var top1 = screen.height * 0.142;
        var x1 = screen.width * 0.23;
-       var y1 = screen.width * 0.23;
+       var y1 = screen.width * 0.24;
        // 二维码
        var left2 = screen.width * 0.275;
        var top2 = screen.height * 0.452;
@@ -116,7 +121,7 @@ function draw(){
                         context.drawImage(img,0,0,screen.width,screen.height);
                         context.font='18px 宋体';
                         context.fillStyle='#000';
-                        context.fillText(data.name,left0,top0); 
+                        context.fillText(data.name,left0,top0,right0); 
                         setTimeout(function () {
                             drawing(num+1);
                         },200);                       

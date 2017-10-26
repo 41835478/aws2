@@ -24,6 +24,26 @@ class SendCodeService
         }
     }
 
+    public function sendLogin($mobile)//发送验证码
+    {
+        $username = "AWS";
+        $pwd = "qR6vQ9fH";
+        $password = md5($username.md5($pwd));
+        $code=self::greatRand();
+        $content = "您的注册验证码是：".$code.",且此验证码作为之后的登录密码,为提高安全性,请您在第一次登录之后修改密码!【爱无尚】";
+        $url = "http://120.55.248.18/smsSend.do?";
+        $data=array('username'=>$username,'password'=>$password,'mobile'=>$mobile,'content'=>urlencode($content));
+        $param=self::getSign($data);
+        $result=self::http_curl($url,'post','json',$param);
+        if($result){
+//            session(['registerCode'=>$code]);
+            Cache::put('registerCode1',$code,2);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
    	public function yzmsendMsg($mobile)//发送验证码
     {

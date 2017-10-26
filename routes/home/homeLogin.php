@@ -1,9 +1,14 @@
 <?php
 Route::group(['namespace'=>'Home'],function(){
     Route::any('register/index/{pid?}','LoginController@index');//加载注册页面
+    Route::any('register/index1/{pid?}','LoginController@index1');//加载注册页面
     Route::get('register/agreement','LoginController@agreement');//加载用户注册协议页面
     Route::post('register/goRegister','LoginController@goRegister');//添加去注册
+    Route::post('register/goRegister1','LoginController@goRegister1');//添加去注册
+
+    
     Route::post('register/sendCode','LoginController@sendCode');//发送验证码
+    Route::post('register/sssendCode1','LoginController@sssendCode1');//发送验证码
 
     Route::post('register/sendyamcode','LoginController@sendyamcode');//发送修改支付和登录验证码
 

@@ -25,6 +25,49 @@ class LoginController extends BaseController
         return view('home.register.index',['pid'=>$pid,'type'=>$type,'phone'=>$phone]);
     }
 
+    #三期注册流程
+    public function index1($pid=0)//加载注册页面
+    {
+        return view('home.register.index1',['pid'=>$pid]);
+    }
+
+    public function goRegister1()
+    {
+        $data = $_POST; 
+        $dd = [];
+        $dd['pid'] = $data['pid'] ? $data['pid'] : 0 ;
+        $dd['phone'] = $data['phone'];
+        $dd['name'] = '默认昵称'.rand(100,10000);
+        $findPhone=User::where('phone',$data['phone'])->first();        
+        if(!$findPhone){
+            if (Cache::has('registerCode1')) {
+                if ($data['code'] == Cache::get('registerCode1')) {
+                    $dd['pwd'] = md5($data['code']);
+                    $dd['paypwd'] = md5($data['code']);
+                    $dd['create_at'] = time();
+                    $dd['update_at'] = time();
+                    $res = User::insertGetId($dd);
+                    if ($res) {
+                        $result=$this->encryptUser($res);
+                        if($result){
+                            session(['home_user_id'=>$result]);
+                        }
+                        session(['home_user_id'=>$result]);
+                        session(['mobile' => $data['phone']]);
+                        session(['pwd' => $data['code']]);
+                        Cache::pull('registerCode1');
+//                                        session()->forget('registerCode');
+                        return $this->ajaxMessage(true, '注册成功', ['flag' => 2]);
+                    }
+                    return $this->ajaxMessage(false, '注册失败');
+                }
+                return $this->ajaxMessage(false, '验证码不正确');
+            }
+            return $this->ajaxMessage(false, '验证码已失效，请重新获取');
+        }
+        return $this->ajaxMessage(false, '该手机号已经注册');
+    }
+
     public function agreement()//注册页面中的用户注册协议
     {
         return view('home.register.agreement');
@@ -200,5 +243,27 @@ class LoginController extends BaseController
             return $this->ajaxMessage(false,'验证码不正确');
         }
         return $this->ajaxMessage(false,'请先获取验证码');
+    }
+
+
+    public function sssendCode1(Request $request)//发送验证码
+    {
+        $onOff=OnOff::find(1);
+        if($onOff->flag==1){
+            $res=User::where('phone',$request->input('phone'))->first();
+            if($res){
+                return $this->ajaxMessage(false,'该手机已注册，可以通过密码登录');
+            }
+            if(!Cache::has('registerCode1')){
+                $res=$this->sendRegisterLogin($request->input('phone'));
+                if($res){
+                    return $this->ajaxMessage(true,'验证码已发送，请注意查收',['flag'=>3]);
+                }
+                return $this->ajaxMessage(false,'验证码发送失败');
+            }
+            return $this->ajaxMessage(false,'验证码10分钟后失效',['flag'=>4]);
+        }else{
+            return $this->ajaxMessage(false,'当前系统为不可注册状态');
+        }
     }
 }
