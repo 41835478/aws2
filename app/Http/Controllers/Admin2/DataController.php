@@ -9,6 +9,8 @@ use DB;
 use App\Http\Model\Order2 as Order;
 use App\Http\Model\User;
 use App\Http\Model\Config2;
+use App\Http\Model\Investment2;
+
 
 use Exception;
 
@@ -66,31 +68,95 @@ class DataController extends Controller
 
     #把众筹订单写入investments2表中
     public function insertInvestments2($orderId)
-    {
-        $order = db::table('order2')->where('id',$orderId)->first(); 
-
-        #判断订单存在不存在
-        if (!count($order)) {
-            return 'false';
-        }
-
-        if ($order->status <= 1) {
-            return 'false';
-        }
-
+    {   
+        // $this->add();
         $data = [];
-        $data['user_id'] = $order->user_id;
-        $data['money'] = $order->total_money ;
-        $data['give_money'] = 0;
-        $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
-        $data['order_id'] = $orderId;
-        $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
-        $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
+        $data[] = time();
+        $this->orderStatusMoney();
+        $data[] =time();
+        // $order = DB::table('order2')->where('id',$orderId)->first(); 
+        dump($data);
+        // #判断订单存在不存在
+        // if (!count($order)) {
+        //     return 'false';
+        // }
 
-        db::table('investments2')->insert($data);
+        // if ($order->status <= 1) {
+        //     return 'false';
+        // }
 
+        // $data = [];
+        // $data['user_id'] = $order->user_id;
+        // $data['money'] = $order->total_money ;
+        // $data['give_money'] = 0;
+        // $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
+        // $data['order_id'] = $orderId;
+        // $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
+        // $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
+
+        // DB::table('investments2')->insert($data);
+
+        // return 'true';
+    }
+
+
+    #众筹订单分红
+    public function orderStatusMoney()
+    {
+        #求出购买订单的用户
+        // $orderUser = Investment2::where(['status'=>1])->pluck('user_id');
+        // $orderId = Investment2::where(['status'=>1])->pluck('id');
+        // if (!count($orderUser)) {
+        //     return 'true';
+        // }
+        #要插入详情表的数组
+        #合并相同的用户id
+        // $orderUser = array_unique($orderUser);
+        
+        $orderInfo = DB::table('investments2')->where(['status'=>1])->select('id','user_id','give_allmoney','give_money')->get();
+
+        if (!count($orderInfo)) {
+            return 'false';
+        }        
+        $data = [];
+        #组合详情数组
+        foreach ($orderInfo as $k => $v) {
+            #修改发送金额
+            $edit = [];
+            $mm = 0;
+            $money = $v->give_allmoney * ( Config2::getConfig(3) / 100 );
+            if ( ($money + $v->give_money) >= $v->give_allmoney ) {
+                $edit['status'] = 2;
+                $edit['give_money'] = $v->give_allmoney;
+                $edit['give_todaymoney'] = $v->give_allmoney - $v->give_money;
+                $mm = $v->give_allmoney - $v->give_money;
+            
+            }else{
+                $edit['give_money'] = $v->give_money + $money;
+                $edit['give_todaymoney'] = $money;
+                $mm = $money;
+            }
+            #修改订单分红金额
+            DB::table('investments2')->where('id',$v->id)->update($edit);
+
+            $data[] = self::addData($v,$mm);
+        }
+
+        DB::table('balance_records2')->insert($data);
         return 'true';
 
+    }
+
+    #组装添加静态分红详情数据
+    public static function addData($orderInfo,$mm)
+    {
+        return [
+            'user_id'=>$orderInfo->user_id,
+            'num'=>$mm,
+            'type'=>4,
+            'info'=>'众筹静态分红',
+            'created_at'=> date('Y-m-d H:i:s',time())
+        ];
     }
 
     #领导团队奖
@@ -143,4 +209,22 @@ class DataController extends Controller
             return $data;
     }
 
+
+    public function add()
+    {
+        $id = db::table('user')->pluck('id');
+
+        for ($i=0; $i < 10000 ; $i++) { 
+            $data = [];
+            $data['user_id'] = $id[$i];
+            $data['money'] = ($i +1) * 100 ;
+            $data['give_money'] = 0;
+            $data['give_allmoney'] = (($i +1) * 100) * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
+            $data['order_id'] = $i+1;
+            $data['created_at'] = date('Y-m-d H:i:s',time());
+            $data['updated_at'] = date('Y-m-d H:i:s',time());
+
+            DB::table('investments2')->insert($data);
+        }
+    }
 }
