@@ -69,34 +69,29 @@ class DataController extends Controller
     #把众筹订单写入investments2表中
     public function insertInvestments2($orderId)
     {   
-        // $this->add();
+
+        $order = DB::table('order2')->where('id',$orderId)->first(); 
+        #判断订单存在不存在
+        if (!count($order)) {
+            return 'false';
+        }
+
+        if ($order->status <= 1) {
+            return 'false';
+        }
+
         $data = [];
-        $data[] = time();
-        $this->orderStatusMoney();
-        $data[] =time();
-        // $order = DB::table('order2')->where('id',$orderId)->first(); 
-        dump($data);
-        // #判断订单存在不存在
-        // if (!count($order)) {
-        //     return 'false';
-        // }
+        $data['user_id'] = $order->user_id;
+        $data['money'] = $order->total_money ;
+        $data['give_money'] = 0;
+        $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
+        $data['order_id'] = $orderId;
+        $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
+        $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
 
-        // if ($order->status <= 1) {
-        //     return 'false';
-        // }
+        DB::table('investments2')->insert($data);
 
-        // $data = [];
-        // $data['user_id'] = $order->user_id;
-        // $data['money'] = $order->total_money ;
-        // $data['give_money'] = 0;
-        // $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
-        // $data['order_id'] = $orderId;
-        // $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
-        // $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
-
-        // DB::table('investments2')->insert($data);
-
-        // return 'true';
+        return 'true';
     }
 
 
@@ -210,21 +205,21 @@ class DataController extends Controller
     }
 
 
-    public function add()
-    {
-        $id = db::table('user')->pluck('id');
+    // public function add()
+    // {
+    //     $id = db::table('user')->pluck('id');
 
-        for ($i=0; $i < 10000 ; $i++) { 
-            $data = [];
-            $data['user_id'] = $id[$i];
-            $data['money'] = ($i +1) * 100 ;
-            $data['give_money'] = 0;
-            $data['give_allmoney'] = (($i +1) * 100) * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
-            $data['order_id'] = $i+1;
-            $data['created_at'] = date('Y-m-d H:i:s',time());
-            $data['updated_at'] = date('Y-m-d H:i:s',time());
+    //     for ($i=0; $i < 10000 ; $i++) { 
+    //         $data = [];
+    //         $data['user_id'] = $id[$i];
+    //         $data['money'] = ($i +1) * 100 ;
+    //         $data['give_money'] = 0;
+    //         $data['give_allmoney'] = (($i +1) * 100) * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
+    //         $data['order_id'] = $i+1;
+    //         $data['created_at'] = date('Y-m-d H:i:s',time());
+    //         $data['updated_at'] = date('Y-m-d H:i:s',time());
 
-            DB::table('investments2')->insert($data);
-        }
-    }
+    //         DB::table('investments2')->insert($data);
+    //     }
+    // }
 }

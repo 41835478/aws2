@@ -1270,8 +1270,11 @@ try{
     }
     #爱心奖金
     public function loverBonus()
-    {
-        return view('home.user.loverBonus',compact(''));
+    {   
+        $user_id=$this->checkUser();
+        $data = DB::table('investments2')->where('user_id',$user_id)->get();
+        $count = DB::table('investments2')->where('user_id',$user_id)->sum('give_money');
+        return view('home.user.loverBonus',compact('count','data'));
     }
 
     #爱心分销奖
