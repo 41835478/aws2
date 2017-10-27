@@ -57,8 +57,8 @@ class UserController  extends BaseController
         $uid=$this->checkUser();
         $t = new User;
         $users = $t->getuserinfo($uid); 
-        if (mb_strlen($users->name,'utf8') <=3) {
-            $users->name = '　 '.$users->name;
+        if (mb_strlen($users->name,'utf8') <=5) {
+            $users->name = '　  '.$users->name;
         }
         if($users['level'] != 1){
         	 return redirect('users/index');

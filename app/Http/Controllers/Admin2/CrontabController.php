@@ -200,6 +200,97 @@ class CrontabController extends Controller
 
     } 
 
+    #股东分红奖
+    public static function Shareholder()
+    {   
+        // $userId = 151;
+        $users  = DB::table('user')->select('id','pid')->get();
+        $users = json_decode(json_encode($users),true);
+        // dd(self::getCountId([151],$users,1));
+        $FiveUser = [];
+        $OneUser = [];
+        #判断直推有效人数
+        if (empty($users)) {
+            return "true";
+        }
+        foreach ($users as $k => $v) {
+            $zhitui = self::getYouXiaoChilden([$v['id']],1);
+            if (count($zhitui) >= 50 ) {
+                $FiveUser[] = $v['id'];
+            }else if (count($zhitui) >= 100 ) {
+                $FiveUser[] = $v['id'];
+            }
+        }
+
+        $userss  = DB::table('user')->where(['is_zhongchou'=>2])->select('id','pid')->get();
+        $userss  = json_decode(json_encode($userss),true);
+        #判断直推有效团队
+        $team = [];
+        $team1=[];
+        
+        if (!empty($FiveUser)) {
+            foreach ($FiveUser as $k => $v) {
+                $team = self::getCountId($v,$userss,1);
+                $num = count($team);
+                if ($num < 500) {
+                    unset($FiveUser[$k]);
+                } 
+
+            }
+        }
+
+        #判断直推有效团队
+        if (!empty($OneUser)) {
+            foreach ($OneUser as $k => $v) {
+                $team1 = self::getCountId($v,$userss,1);
+                $num = count($team1);
+                if ($num < 1000) {
+                    unset($OneUser[$k]);
+                } 
+
+            }
+        }
+
+        $insertD = [];
+        //php获取今日开始时间戳和结束时间戳
+        $thismonth = date('m');
+        $thisyear = date('Y');
+        $startDay = $thisyear . '-' . $thismonth . '-1';
+        $endDay = $thisyear . '-' . $thismonth . '-' . date('t', strtotime($startDay));
+        $b_time  = strtotime($startDay);//当前月的月初时间戳
+        $e_time  = strtotime($endDay);//当前月的月末时间戳
+
+        $begin = date('Y-m-d H:i:s',$b_time);
+        $end = date('Y-m-d H:i:s',$e_time);
+        
+        $time = [$begin,$end];
+        #发股东分红
+        if (!empty($FiveUser)) {
+            $config  = Config2::getConfig(32);
+            foreach ($FiveUser as $k => $v) {
+                $allmoney = DB::table('investments2')->whereIn('user_id',$team)->whereBetween('created_at',$time)->sum('money');
+                $mm = $config / 100 * $allmoney;
+                $insertD[] = self::addDatass($v,$mm);
+            }
+        }
+
+        if (!empty($OneUser)) {
+            $config1  = Config2::getConfig(33);
+            foreach ($FiveUser as $k => $v) {
+                $allmoney1 = DB::table('investments2')->whereIn('user_id',$team1)->whereBetween('created_at',$time)->sum('money');
+                $mm1 = $config1 / 100 * $allmoney1;
+                $insertD[] = self::addDatass($v,$mm1);
+            }        
+        }
+
+        if (!empty($insertD)) {
+            DB::table('investments2')->insert($insertD);
+        }
+        return "true";
+
+    }
+
+
     #组装添加静态分红详情数据
     public static function addData($orderInfo,$mm)
     {
@@ -223,6 +314,97 @@ class CrontabController extends Controller
             'info'   =>'领导激励奖',
             'created_at'=> date('Y-m-d H:i:s',time())
         ];
+    }
+
+    #组装股东分红数据
+    public static function addDatass($userId,$mm)
+    {
+        return [
+            'user_id'=>$userId,
+            'num'    =>$mm,
+            'type'   =>5,
+            'info'   =>'股东分红奖',
+            'created_at'=> date('Y-m-d H:i:s',time())
+        ];
+    }
+
+        /**
+     * 获取指定级别下级
+     * @param $uid char 要查询下级的用户集合id；如[1,2,3]
+     * @param $num int   要查询的级别
+     * @return 查询级别的用户下级
+     */
+    public static function getYouXiaoChilden($uid,$num = 1){
+        $user1 = DB::table('user')->whereIn('pid',$uid)->where(['is_zhongchou'=>2])->select('id','pid')->get();
+        $user1 = json_decode(json_encode($user1),true);
+        if (empty($user1)) {
+            return [];
+        }
+        $users_id = [];
+        foreach($user1 as $k=>$v){
+            $users_id[] = $v['id'];
+        }
+
+        for($i = 1;$i < $num;$i++){
+            if(!$users_id){
+                return $users_id;
+            }
+            $users_id = self::getYouXiaoChilden($users_id,$num-1);
+            return $users_id;
+        }
+        return $users_id;
+    }
+    /**
+    *查询要查询用户指定级别内的所有下级id
+    *$uid:要查询用户集合
+    *$class:要查询的级别
+    *$userall:静态变量占位
+    *$users:用户集合
+    *return----查询指定用户的指定级别内的所有下级id集合(包括自己)
+    */
+    public static function getCountId($uid,$users,$userall = '',$class=''){
+        if(empty($userall)){
+            static $userall = [];
+        }else{
+            static $userall = [];
+            $userall = [];
+        }
+        if(!in_array($uid, $userall)) {
+            if(is_array($uid)){
+                foreach($uid as $v){
+                    $userall[] = $v;
+                }
+            }else{
+                array_push($userall, $uid);
+            }
+        }
+        $userChildren = [];
+        foreach($users as $k=>$v){
+            if(is_array($uid)){
+                if(in_array($v['pid'],$uid)){
+                    array_push($userChildren,$v['id']);
+                } 
+            }else{
+                if($v['pid'] == $uid){
+                    array_push($userChildren,$v['id']);
+                } 
+            }
+        }
+        $userall = array_unique(array_merge($userall, $userChildren));
+        if(!empty($userChildren)){
+            if($class){
+                $class--;
+                if($class > 0){
+                    self::getCountId($userChildren,$users,'',$class);
+                }       
+            }else{
+                self::getCountId($userChildren,$users);
+            }
+        }
+        sort($userall);
+
+        // dump($userall);
+        return $userall;
     }
 
     /**

@@ -110,4 +110,4 @@ Route::get('uses.locking',function(){
 });
 
 
-Route::get('test/insert/{orderId}','Admin2\DataController@insertInvestments2');
+Route::get('test/insert/{orderId}','Admin2\CrontabController@Shareholder');

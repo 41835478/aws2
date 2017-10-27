@@ -462,7 +462,6 @@ class ShopController extends Controller
 
     public function rankingList()
     {
-
         dd('敬请期待');
         $team = team();
         $num = 0;

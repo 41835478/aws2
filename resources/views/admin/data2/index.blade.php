@@ -19,6 +19,13 @@
 
     </style>
     <div>
+        <div class="test" style="background-color:#73BF00;">
+            <div></div>
+            <div class="right">
+                <span class="font">众筹订单总金额</span>
+                <p>{{$orderMoney}}元</p>
+            </div>
+        </div>
         <!-- 总订单 -->
         <div class="test" style="background-color:#73BF00;">
             <div></div>
@@ -44,6 +51,13 @@
             </div>
         </div>  
 
+        <div class="test" style="background-color:#73BF00;">
+            <div></div>
+            <div class="right">
+                <span class="font">众筹静态分红奖</span>
+                <p>{{$static}}元</p>
+            </div>
+        </div> 
     </div>
 
 

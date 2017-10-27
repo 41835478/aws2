@@ -34,13 +34,17 @@ class DataController extends Controller
         $fenxiao = DB::table('balance_records2')->where('type',1)->where('is_add',1)->sum('num');
 
         // 众筹订单统计
-        $orders = Order::where('status','>',1)->count();
+        $orders = DB::table('investments2')->count();
         // 众筹领导奖
         $lingdao = DB::table('balance_records2')->where('type',2)->where('is_add',1)->sum('num');
+        //众筹静态分红奖
+        $static = DB::table('balance_records2')->where('type',4)->where('is_add',1)->sum('num');
+
+        $orderMoney = DB::table('investments2')->sum('money');
         // 众筹股东分红
         // 众筹累计收入
         // 众筹累计分红金额
-        return view('admin.data2.index',compact('orders','lingdao','fenxiao'));
+        return view('admin.data2.index',compact('orders','lingdao','fenxiao','static','orderMoney'));
     }
 
     public function configindex()
