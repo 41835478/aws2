@@ -56,17 +56,16 @@
 <div class="content" style="padding-bottom:0">
 	<div class="bonus_box">
 		<ul class="bonusList">
-<!-- 		@foreach($data as  $k=>$v)
+		@foreach($data as  $k=>$v)
 			<li class="div_clearFloat bonusItem">
 				<span>{{$k+1}}</span>
-				<img src="{{$v['pic']}}" alt=""/>
 				<div class="bonus_con">
-					<p>{{$v['name']}}</p>
-					<span> {{date('Y-m-d H:i:s',$v['create_at'])}}</span>
+					<p>{{$v['info']}}</p>
+					<span> {{$v['created_at']}}</span>
 				</div>
-				<p>￥{{$v['money']}}</p>
+				<p>￥{{$v['num']}}</p>
 			</li>
-		@endforeach -->
+		@endforeach
 
 		</ul>
 	</div>

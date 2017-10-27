@@ -14,62 +14,28 @@ use App\Http\Model\Investment2;
 
 use Exception;
 
-class DataController extends Controller
+class CrontabController extends Controller
 {
 
-     public function __construct(Order $orderclass,User $user)
+     public function __construct(User $user)
     {
-        $this->orderclass = $orderclass;
         $this->user = $user;
 
     }
 
-    public function index()
+    public function action()
     {
-        #今日开始时间
-        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
-        #今日结束时间
-        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
-        // 众筹分销奖金统计
-        $fenxiao = DB::table('balance_records2')->where('type',1)->where('is_add',1)->sum('num');
-
-        // 众筹订单统计
-        $orders = Order::where('status','>',1)->count();
-        // 众筹领导奖
-        $lingdao = DB::table('balance_records2')->where('type',2)->where('is_add',1)->sum('num');
-        // 众筹股东分红
-        // 众筹累计收入
-        // 众筹累计分红金额
-        return view('admin.data2.index',compact('orders','lingdao','fenxiao'));
-    }
-
-    public function configindex()
-    {
-        $data=DB::table('config2')->get()->toArray();
-        return view('admin.data2.configindex',compact('data'));
-    }
-
-    public function configinfo(Request $request){
-
-        
-        $post=$request->input();
-        if (!empty($post)) {
-            $res = DB::table('config2')->where(['id'=>$post['id']])->update(['value'=>$post[$post['id']]]); 
+        #先执行众筹订单静态分红
+        $return = self::orderStatusMoney();
+        if ($return == "true") {
+            self::LeaderTeamPrize();
         }
-        // $res = DB::table('config2')->where()->update();
-        if($res){
-            return redirect('admin2/data/configindex')->with('success','操作成功');
-        }else{
-            return redirect('admin2/data/configindex')->with('success','无需操作');
-        }   
-
-       
     }
+
 
     #把众筹订单写入investments2表中
     public function insertInvestments2($orderId)
     {   
-
         $order = DB::table('order2')->where('id',$orderId)->first(); 
         #判断订单存在不存在
         if (!count($order)) {
@@ -95,7 +61,7 @@ class DataController extends Controller
     }
 
 
-    #众筹订单分红
+    #众筹订单静态分红
     protected static function orderStatusMoney()
     {
         
@@ -135,31 +101,6 @@ class DataController extends Controller
 
     }
 
-    #组装添加静态分红详情数据
-    public static function addData($orderInfo,$mm)
-    {
-        return [
-            'user_id'=>$orderInfo->user_id,
-            'num'=>$mm,
-            'type'=>4,
-            'info'=>'众筹静态分红',
-            'created_at'=> date('Y-m-d H:i:s',time())
-        ];
-    }
-
-    #组装添加领导奖详情数据
-    public static function addDatas($userId,$level,$mm)
-    {
-        return [
-            'user_id'=>$userId,
-            'level'  =>$level,
-            'num'    =>$mm,
-            'type'   =>2,
-            'info'   =>'领导激励奖',
-            'created_at'=> date('Y-m-d H:i:s',time())
-        ];
-    }
-
 
     #领导团队奖
     public static function LeaderTeamPrize()
@@ -175,7 +116,7 @@ class DataController extends Controller
         }
     }
 
-    #计算领导奖金额
+    #计算每个人的领导奖金额
     public static function CalculatedAmount($userId,$users)
     {
         #查出用户的直推人数
@@ -219,15 +160,6 @@ class DataController extends Controller
         DB::table('balance_records2')->insert($insertD);
     }
 
-    #等级发领导奖
-    public static function LevelJudge($level,$zhitui,$money,$newM)
-    {       
-
-
-        $insertD[] = self::addDatas($userId,$k,$todayMoney);
-        
-    }
-
     #根据等级和已发金额求出此等级应发金额
     public static function GradeGetMoney($id,$zhitui,$limitGrade,$putAllMoney)
     {   
@@ -268,59 +200,31 @@ class DataController extends Controller
 
     } 
 
-
-    /**
-    *查询要查询用户指定级别内的所有下级id
-    *$uid:要查询用户集合
-    *$class:要查询的级别
-    *$userall:静态变量占位
-    *$users:用户集合
-    *return----查询指定用户的指定级别内的所有下级id集合(包括自己)
-    */
-    public static function getChildenAll_class($uid,$users,$userall = '',$class=''){
-        if(empty($userall)){
-            static $userall = [];
-        }else{
-            static $userall = [];
-            $userall = [];
-        }
-        if(!in_array($uid, $userall)) {
-            if(is_array($uid)){
-                foreach($uid as $v){
-                    $userall[] = $v;
-                }
-            }else{
-                array_push($userall, $uid);
-            }
-        }
-        $userChildren = [];
-        foreach($users as $k=>$v){
-            if(is_array($uid)){
-                if(in_array($v['pid'],$uid)){
-                    array_push($userChildren,$v['id']);
-                } 
-            }else{
-                if($v['pid'] == $uid){
-                    array_push($userChildren,$v['id']);
-                } 
-            }
-        }
-        $userall = array_unique(array_merge($userall, $userChildren));
-        if(!empty($userChildren)){
-            if($class){
-                $class--;
-                if($class > 0){
-                    self::getChildenAll_class($userChildren,$users,'',$class);
-                }       
-            }else{
-                self::getChildenAll_class($userChildren,$users);
-            }
-        }
-        sort($userall);
-
-        // dump($userall);
-        return $userall;
+    #组装添加静态分红详情数据
+    public static function addData($orderInfo,$mm)
+    {
+        return [
+            'user_id'=>$orderInfo->user_id,
+            'num'=>$mm,
+            'type'=>4,
+            'info'=>'众筹静态分红',
+            'created_at'=> date('Y-m-d H:i:s',time())
+        ];
     }
+
+    #组装添加领导奖详情数据
+    public static function addDatas($userId,$level,$mm)
+    {
+        return [
+            'user_id'=>$userId,
+            'level'  =>$level,
+            'num'    =>$mm,
+            'type'   =>2,
+            'info'   =>'领导激励奖',
+            'created_at'=> date('Y-m-d H:i:s',time())
+        ];
+    }
+
     /**
      * 获取指定级别下级
      * @param $uid char 要查询下级的用户集合id；如[1,2,3]
@@ -345,26 +249,6 @@ class DataController extends Controller
         }
         return $users_id;
     }
-
-    #查询无限下级用户id
-    #$id []
-    public static function child($id,$data = [])
-    {   
-        $user1 = DB::table('user')->whereIn('pid',$id)->pluck('id');
-        $user1 = json_decode(json_encode($user1),true);
-        if ($user1) {
-            $allUser = [];
-            foreach ($user1 as $k => $v) {
-                $data[] = $v;
-                $allUser[] = $v;
-            }
-            $data = self::child($allUser,$data);
-        }else{
-            $data = array_merge($user1,$data);
-        }
-            return $data;
-    }
-
 
     // public static function add()
     // {

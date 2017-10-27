@@ -52,7 +52,7 @@
 <div class="content" style="padding-top:48px;">
 	<div class="bonus">
 		<h2>
-			<span>&yen;</span><em>8000.00</em>
+			<span>&yen;</span><em>{{$count}}</em>
 		</h2>
 		<p>累计奖励金额</p>
 	</div>
@@ -63,72 +63,25 @@
 	</ul>
 	<div style="height:12px;background-color:#f5f5f5"></div>
 	<ul class="lobonus-box">
+		@foreach ($data as $k=>$v)
 		<li class="lobonus-list">
 			<div class="div_left">
-				<p>&yen;105.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
+				<p>&yen;{{$v->money}}</p>
+				<span>投资日期：{{$v->created_at}}</span>
 			</div>
-			<p class="should">&yen;168.00</p>
+			<p class="should">&yen;{{$v->give_allmoney}}</p>
 			<div class="div_right">
-				<p>&yen;168.00</p>
-				<span>已出局</span>
+				<p>&yen;{{$v->give_money}}</p>
+				<span>
+					@if ($v->status == 1) 
+					未出局
+					@elseif($v->status == 2)
+					已出局
+					@endif
+				</span>
 			</div>
 		</li>
-		<li class="lobonus-list">
-			<div class="div_left">
-				<p>&yen;30000.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
-			</div>
-			<p class="should">&yen;48000.00</p>
-			<div class="div_right">
-				<p>&yen;48000.00</p>
-				<span>已出局</span>
-			</div>
-		</li>
-		<li class="lobonus-list">
-			<div class="div_left">
-				<p>&yen;105.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
-			</div>
-			<p class="should">&yen;168.00</p>
-			<div class="div_right">
-				<p>&yen;168.00</p>
-				<span>已出局</span>
-			</div>
-		</li>
-		<li class="lobonus-list">
-			<div class="div_left">
-				<p>&yen;105.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
-			</div>
-			<p class="should">&yen;168.00</p>
-			<div class="div_right">
-				<p>&yen;105.00</p>
-				<span class="color-blue">未出局</span>
-			</div>
-		</li>
-		<li class="lobonus-list">
-			<div class="div_left">
-				<p>&yen;2100.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
-			</div>
-			<p class="should">&yen;3360.00</p>
-			<div class="div_right">
-				<p>&yen;2000.00</p>
-				<span class="color-blue">未出局</span>
-			</div>
-		</li>
-		<li class="lobonus-list">
-			<div class="div_left">
-				<p>&yen;2100.00</p>
-				<span>投资日期：2017-10-20 12:00</span>
-			</div>
-			<p class="should">&yen;3360.00</p>
-			<div class="div_right">
-				<p>&yen;2000.00</p>
-				<span class="color-blue">未出局</span>
-			</div>
-		</li>
+		@endforeach
 	</ul>
 </div>
 <script type="text/javascript">

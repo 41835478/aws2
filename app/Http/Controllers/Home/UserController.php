@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use Illuminate\Http\Request;
 
+use App\Http\Model\Config2;
 use App\Http\Model\User;
 use App\Http\Model\Pointsrecode;
 use App\Http\Model\Promoterecode;
@@ -138,8 +139,8 @@ class UserController  extends BaseController
         //     event(new AcoutEvent($uid));
         // }
 
-        $love = DB::table('order2')->where(['user_id'=>$uid])->where('status','>=','2')->sum('total_money');    
-
+        $love = DB::table('investments2')->where(['user_id'=>$uid])->sum('money');    
+        $love = sprintf("%1.2f",$love);
         return view('home.user.index',compact('users','pusers','countt','love'));
     }
 
@@ -1223,9 +1224,6 @@ try{
                  return $this->ajaxMessage(true,'操作成功',['flag'=>1]);
             }
         }
-
-
-
     }
 
 
@@ -1251,15 +1249,18 @@ try{
     {   
         $user_id=$this->checkUser();
 
-        $love = DB::table('order2')->where(['user_id'=>$user_id])->where('status','>=',2)->sum('total_money');
-        $count = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>1])->sum('num');
+        $love = DB::table('investments2')->where(['user_id'=>$user_id])->sum('money');
+        $count = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>4])->sum('num');
         return view('home.user.crowdfunding',compact('love','count'));
     }   
 
     #众筹奖金
     public function loverDetail()
     {
-        return view('home.user.loverDetail',compact(''));
+        $user_id = $this->checkUser();
+        $data = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>4])->get();
+
+        return view('home.user.loverDetail',compact('data'));
     }    
 
     #股东分红
@@ -1287,16 +1288,67 @@ try{
     public function loverleader()
     {   
         $user_id=$this->checkUser();
-        $countMoney = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>2])->sum('num');
-        #未判断是否封顶
-        return view('home.user.loverleader',compact('countMoney'));
+        //php获取今日开始时间戳和结束时间戳
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        
+        $begin = date('Y-m-d H:i:s',$beginToday);
+        $end = date('Y-m-d H:i:s',$endToday);
+
+        $countMoney = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>2])->whereBetween('created_at',[$begin,$end])->sum('num');
+        $type = '';
+        #直推多少人发钱限制
+        $limitGrade =  Config2::getConfig([25,26,27,28]);
+
+        $zhitui = DB::table('user')->where('pid',$user_id)->count();
+        if ( 0< $zhitui &&  $zhitui<= $limitGrade[0] ) {
+            if ($countMoney <1000) {
+                $type = '未封顶';
+            }else{
+                $type = '已封顶';
+            }
+        }else if ( $limitGrade[0]< $zhitui &&  $zhitui <= $limitGrade[1] ) {
+            if ($countMoney <2000) {
+                $type = '未封顶';
+            }else{
+                $type = '已封顶';
+            }
+        }else if ( $limitGrade[1]< $zhitui &&  $zhitui <= $limitGrade[2] ) {
+            if ($countMoney <4000) {
+                $type = '未封顶';
+            }else{
+                $type = '已封顶';
+            }
+        }else if ( $limitGrade[2]< $zhitui &&  $zhitui <= $limitGrade[3] ) {
+            if ($countMoney <8000) {
+                $type = '未封顶';
+            }else{
+                $type = '已封顶';
+            }
+        }else{
+            if ($countMoney <8000) {
+                $type = '未封顶';
+            }else{
+                $type = '已封顶';
+            }
+        }
+
+        $all = [];
+        for ($i=1; $i <= 10; $i++) { 
+            $all[] = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>2])->where(['level'=>$i])->sum('num');
+        }
+
+        return view('home.user.loverleader',compact('countMoney','type','all'));
     }
 
     #爱心领导奖几代
     public function loverleader2()
     {
+        $user_id=$this->checkUser();
+
         $type = $_GET['type'];
-        $data = [];
+        $data = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>2])->where(['level'=>$type])->get();
+        $data = json_decode(json_encode($data),true);
         return view('home.user.loverleader2',compact('type','data'));
     }
 

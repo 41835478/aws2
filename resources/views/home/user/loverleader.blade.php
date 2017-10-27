@@ -48,7 +48,7 @@
 <div class="content" style="padding-top:48px;padding-bottom:0">
 	<div class="bonus">
 		<h2>
-			<span>&yen;</span><em>{{$countMoney}}</em><span style="color:#114e7c">（已封顶）</span>
+			<span>&yen;</span><em>{{$countMoney}}</em><span style="color:#114e7c">（{{$type}}）</span>
 		</h2>
 		<p>今日收益</p>
 	</div>
@@ -57,52 +57,53 @@
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang01.png" alt="图标"/>
 				<span>一级领导奖</span>
-				<i class="iconfont icon-you"></i>
+
+				<i style="float: right;color: #666">{{$all[0]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang02.png" alt="图标"/>
 				<span>二级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[1]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang03.png" alt="图标"/>
 				<span>三级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[2]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang04.png" alt="图标"/>
 				<span>四级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[3]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang05.png" alt="图标"/>
 				<span>五级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[4]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang06.png" alt="图标"/>
 				<span>六级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[5]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang07.png" alt="图标"/>
 				<span>七级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[6]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang08.png" alt="图标"/>
 				<span>八级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[7]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang09.png" alt="图标"/>
 				<span>九级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[8]}} 元</i>
 			</li>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang10.png" alt="图标"/>
 				<span>十级领导奖</span>
-				<i class="iconfont icon-you"></i>
+				<i style="float: right;color: #666">{{$all[9]}} 元</i>
 			</li>
 		</ul>
 	</div>

@@ -33,66 +33,25 @@
 </div>
 <div class="content" style="padding-top:48px">
 	<ul style="padding-top:12px;">
+		@foreach ($data as $k=>$v)
 		<li class="act_list">
 			<img src="/home/images/red05.png" alt="">
 			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
+				<p class="top_p">{{$v->info}}</p>
+				<p class="time">{{$v->created_at}}</p>
 			</div>
 			<div class="act_money">
-				<span>105.00</span>
+				<span>
+					@if ( $v->is_add == 1 )
+					+{{$v->num}}
+					@elseif ($v->is_add == 2 )
+					-{{$v->num}}
+					@endif
+
+				</span>
 			</div>
 		</li>
-		<li class="act_list">
-			<img src="/home/images/red05.png" alt="">
-			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				<span>500.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="/home/images/red05.png" alt="">
-			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				<span>2100.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="/home/images/red05.png" alt="">
-			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				<span>30000.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="/home/images/red05.png" alt="">
-			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				<span>500.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="/home/images/red05.png" alt="">
-			<div class="act_class">
-				<p class="top_p">众筹消费</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				<span>2100.00</span>
-			</div>
-		</li>
+		@endforeach
 	</ul>
 </div>
 <script>
