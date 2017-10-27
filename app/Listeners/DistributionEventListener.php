@@ -67,47 +67,47 @@ class DistributionEventListener
                 $recommend_result = $upUser->recommend_count >= $level; //判断直推几人拿几代
 
                 if($recommend_result){ //判断能拿几代奖金
-                    //获取用户的日封顶
-                    $money = 0;
-                    $config25 = Config2::find(25)->value('value');
-                    $config26 = Config2::find(26)->value('value');
-                    $config27 = Config2::find(27)->value('value');
-                    $config28 = Config2::find(28)->value('value');
+//                    //获取用户的日封顶
+//                    $money = 0;
+//                    $config25 = Config2::find(25)->value('value');
+//                    $config26 = Config2::find(26)->value('value');
+//                    $config27 = Config2::find(27)->value('value');
+//                    $config28 = Config2::find(28)->value('value');
+//
+//                    if($upUser->recommend_count >=1 && $upUser->recommend_count < $config25)
+//                    {
+//                        $money = 1000;
+//                    }
+//                    elseif ($upUser->recommend_count >= $config25 && $upUser->recommend_count <$config26)
+//                    {
+//                        $money = 2000;
+//                    }
+//                    elseif ($upUser->recommend_count >= $config26 && $upUser->recommend_count < $config27)
+//                    {
+//                        $money = 4000;
+//                    }
+//                    elseif ($upUser->recommend_count >= $config27 && $upUser->recommend_count <$config28)
+//                    {
+//                        $money = 8000;
+//                    }
+//
+//                \Log::info('日封顶' . $money);
+//                    $dayMoney = $upUser->accountRecords()
+//                        ->whereIn('type', [BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, BalanceRecord2::TYPE_LEADER_PRIZE])
+//                        ->where('created_at', '>=', Carbon::today())
+//                        ->where('created_at', '<=', Carbon::today()->addDay())
+//                        ->sum('num');//获取今天的所有下级收益
+//                    \Log::info('上级今天收益' . $dayMoney);
 
-                    if($upUser->recommend_count >=1 && $upUser->recommend_count < $config25)
-                    {
-                        $money = 1000;
-                    }
-                    elseif ($upUser->recommend_count >= $config25 && $upUser->recommend_count <$config26)
-                    {
-                        $money = 2000;
-                    }
-                    elseif ($upUser->recommend_count >= $config26 && $upUser->recommend_count < $config27)
-                    {
-                        $money = 4000;
-                    }
-                    elseif ($upUser->recommend_count >= $config27 && $upUser->recommend_count <$config28)
-                    {
-                        $money = 8000;
-                    }
-
-                \Log::info('日封顶' . $money);
-                    $dayMoney = $upUser->accountRecords()
-                        ->whereIn('type', [BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, BalanceRecord2::TYPE_LEADER_PRIZE])
-                        ->where('created_at', '>=', Carbon::today())
-                        ->where('created_at', '<=', Carbon::today()->addDay())
-                        ->sum('num');//获取今天的所有下级收益
-                    \Log::info('上级今天收益' . $dayMoney);
-
-                    if ($money > $dayMoney) { //如果日封顶为达到继续奖励
+//                    if ($money > $dayMoney) { //如果日封顶为达到继续奖励
                         $config_id = $data[$level];//获取配置表id
                         $value = Config2::find($config_id)->value;
                         $percentage = $value / 100; //计算百分比
                         \Log::info($level . '级百分比' . $percentage);
                         $userIncome = $totalMoney * $percentage;//计算返佣钱
-                        if (($dayMoney + $userIncome) > $money) {//把超出的收益减去;
-                            $userIncome = $money - $dayMoney;
-                        }
+//                        if (($dayMoney + $userIncome) > $money) {//把超出的收益减去;
+//                            $userIncome = $money - $dayMoney;
+//                        }
                         $res = $this->threeRecordService->setRecord($user_id, $upUser->id, $userIncome, $level . '代分销奖金');
                         if ($res) {
                             $res1 = $this->accountRecordService->setAccountRecord($upUser->id, $userIncome, BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, $level . '代分销奖金', 1);
@@ -125,10 +125,10 @@ class DistributionEventListener
                         } else {
                             \Log::info($level . '级记录失败');
                         }
-                    } else {
-                        \Log::info('用户日封顶达到直接越过，为下一级用户返佣');
-                        event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id]));
-                    }
+//                    } else {
+//                        \Log::info('用户日封顶达到直接越过，为下一级用户返佣');
+//                        event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id]));
+//                    }
                 }else{
                     Log::info('直推人数不够');
                 }
