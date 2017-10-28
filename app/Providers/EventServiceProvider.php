@@ -37,6 +37,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\DistributionEvent' => [ //分销
             'App\Listeners\DistributionEventListener',
         ],
+//        'App\Events\StaticEvent' => [ //静态，未使用；
+//            'App\Listeners\StaticEventListener',
+//        ],
     ];
 
     /**
