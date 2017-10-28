@@ -94,6 +94,15 @@
 				</a>
 			</li>
 		</ul>
+		<ul class="centerList centerList1">
+			<li class="centerItem">
+				<a href="{{url('users/ownaccount1')}}" class="a_jump">
+					<img src="/home/images/heart01.png" alt=""/>
+					<span>转入余额</span>
+					<i class="iconfont icon-you"></i>
+				</a>
+			</li>
+		</ul>
 	</div>
 </div>
 <script>

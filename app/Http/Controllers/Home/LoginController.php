@@ -150,9 +150,8 @@ class LoginController extends BaseController
     public function sendyamcode(Request $request)//修改密码时使用
     {
 
-         
         $res=User::where('phone',$request->input('phone'))->first();
-
+        
         if($res){
 //             Cache::forget('yzmCode');
             //if(!$request->session()->has('yzmCode')){

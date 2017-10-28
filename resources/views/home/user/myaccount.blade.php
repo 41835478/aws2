@@ -54,6 +54,7 @@
 						@elseif($v['type']==3) 见点奖
 						@elseif($v['type']==4) 推荐奖
 						@elseif($v['type']==5) 升级奖
+						@elseif($v['type']==7) 爱心奖转入
 						@endif
 					</p>
 					<p class="time">{{date('Y-m-d H:i:s',$v['create_at'])}}</p>

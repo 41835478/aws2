@@ -65,6 +65,9 @@
     Route::get('users/loverleader2','UserController@loverleader2');//爱心领导奖详情
     Route::get('users/myTeam_new','UserController@myTeam_new');//我的团队
     Route::get('users/teamList','UserController@teamList');//团队列表
+    Route::post('users/ownaccount','UserController@ownaccount');//爱心奖转入余额
+    Route::get('users/ownaccount1','UserController@ownaccount1');//爱心奖转入余额页面
+	
 
 	Route::get('users/createqrcode1','UserController@createqrcode1');//生成二维码
 

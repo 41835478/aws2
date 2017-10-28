@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Model\Config2;
 use App\Http\Model\User;
 use App\Http\Model\Pointsrecode;
+use App\Http\Model\BalanceRecord2;
 use App\Http\Model\Promoterecode;
 use App\Http\Model\Incomerecode;
 use App\Http\Model\Withdraw;
@@ -139,7 +140,10 @@ class UserController  extends BaseController
         //     event(new AcoutEvent($uid));
         // }
 
-        $love = DB::table('investments2')->where(['user_id'=>$uid])->sum('money');    
+        $love = DB::table('balance_records2')->where(['user_id'=>$uid,'is_add'=>1])->sum('num');    
+        $love1 = DB::table('balance_records2')->where(['user_id'=>$uid,'is_add'=>2])->sum('num');    
+        
+        $love = $love - $love1;
         $love = sprintf("%1.2f",$love);
         return view('home.user.index',compact('users','pusers','countt','love'));
     }
@@ -357,7 +361,9 @@ try{
 
 
             $res=DB::table('config')->where('id',1)->first();
-            $xitian=  100 * 0.01 - $res->tixian  * 0.01;
+            $config = Config2::getConfig(29); //提现倍数
+            $config1 = Config2::getConfig(31); //平台维护费百分比
+            $config2 = Config2::getConfig(30); //消费积分百分比
 
             $countzhi=User::where(['pid'=>$uid,'level'=>1])->count();
             if($countzhi < 3 ){
@@ -412,8 +418,8 @@ DB::beginTransaction();
 try{ 			 
     			User::where('id',$uid)->decrement('account', $post['num']);
 
-                $tixiannum=$xitian-0.3;
-    			#添加到提现表 百分70
+                $tixiannum=(1 - ($config1 / 100) - ($config2 / 100) );
+    			#添加到提现表 
     			$data=[];
     			$data['user_id']=$users['id'];
     			$data['mobile']=$users['phone'];
@@ -441,28 +447,16 @@ try{
                 $dddd['create_at']=time();
                 incomerecode::insert($dddd);
 
-
-    			#添加复投积分 20%
-    			$dataf=[];
-    			$dataf['user_id']=$users['id'];
-    			$dataf['flag']=1;
-    			$dataf['points_info']='提现获得';
-    			$dataf['sign']=1;
-    			$dataf['points']=$post['num'] * 0.20;
-                $dataf['create_at']=time();
-    			Pointsrecode::insert($dataf);
-    			User::where('id',$users['id'])->increment('repeat_points', $post['num'] * 0.20);
-
-    			#添加到消费积分 10%
+    			#添加到消费积分 
     			$datax=[];
     			$datax['user_id']=$users['id'];
     			$datax['flag']=2;
     			$datax['points_info']='提现获得';
     			$datax['sign']=1;
-    			$datax['points']=$post['num'] * 0.10;
+    			$datax['points']=$post['num'] * ( $config2 / 100 );
                 $datax['create_at']=time();
     			Pointsrecode::insert($datax);
-    			$res=User::where('id',$users['id'])->increment('consume_points', $post['num'] * 0.10);
+    			$res=User::where('id',$users['id'])->increment('consume_points',$post['num'] * ( $config2 / 100 ) );
                	$num=1;
 	
 
@@ -482,6 +476,95 @@ try{
 
     	}
     }
+
+    public function ownaccount1()
+    {
+        $uid=$this->checkUser();
+        $t = new User;
+        $users=$t->getuserinfo($uid);
+        $count = DB::table('balance_records2')->where('user_id',$uid)->where('is_add',1)->sum('num');
+        return view('home.user.ownaccount',compact('users','count'));
+    }
+
+    #爱心奖转入余额
+    public function ownaccount(Request $request)
+    {
+        $uid=$this->checkUser();
+
+        $post=$request->input();
+        if($post['code']=='' || $post['num']=='' ){
+            return $this->ajaxMessage(false,'参数错误');
+        }
+        if($post['code'] !=session('yzmCode')){
+            return $this->ajaxMessage(false,'短信验证码错误');
+        }
+        if($post['num'] < 50){
+            return $this->ajaxMessage(false,'金额最低为50');
+        }
+
+        $count = DB::table('balance_records2')->where('user_id',$uid)->where('is_add',1)->sum('num');
+
+        if ( abs($post['num']) > $count) {
+            return $this->ajaxMessage(false,'金额不够');
+        }
+
+        $config = Config2::getConfig(29); //提现倍数
+        $config1 = Config2::getConfig(31); //平台维护费百分比
+        $config2 = Config2::getConfig(30); //消费积分百分比
+        $num=0;
+        $aa = '';
+             #开启事务 
+            DB::beginTransaction();
+            try{       
+                $mm = abs($post['num']) * (1 - ($config1 /100) - ($config2 / 100) );      
+                User::where('id',$uid)->increment('account', $mm);
+
+                #添加到Pointsrecode
+                $dddd=[];
+                $dddd['user_id']=$uid;
+                $dddd['flag']=1;
+                //$dddd['points_info']='提现';
+                $dddd['money']=$mm;
+                $dddd['status']=1;
+                $dddd['type']=7;
+                $dddd['create_at']=time();
+                $dddd['update_at']=$dddd['create_at'];
+                incomerecode::insert($dddd);
+
+                #添加到消费积分 
+                $datax=[];
+                $datax['user_id']=$uid;
+                $datax['flag']=2;
+                $datax['sign']=1;
+                $datax['points_info']='爱心转余额获得';
+                $datax['points']=abs($post['num']) * ( $config2 / 100 );
+                $datax['create_at']=time();
+                Pointsrecode::insert($datax);
+                User::where('id',$uid)->increment('consume_points',abs($post['num'] * ( $config2 / 100 )) );
+
+                $dds = [];
+                $dds['user_id'] =$uid;
+                $dds['num'] =abs($post['num']);
+                $dds['type'] =3;
+                $dds['is_add'] = 2;
+                $dds['info'] ='转入余额';
+                $dds['created_at'] = date('Y-m-d H:i:s',time());   
+                BalanceRecord2::insert($dds);
+                $num=1;
+            //中间逻辑代码 
+                DB::commit(); 
+            }catch (\Exception $e) { 
+                $aa =  $e->getMessage();   
+            //接收异常处理并回滚 
+                DB::rollBack(); 
+            }
+                if($num==1){
+                   return $this->ajaxMessage(true,'操作成功',['flag'=>1]); 
+               }else{
+                    return $this->ajaxMessage(false,$aa);
+               }
+    }
+
 
     public function order_num()//生成交易订单号
     {
