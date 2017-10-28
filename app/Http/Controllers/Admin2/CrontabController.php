@@ -16,49 +16,45 @@ use Exception;
 
 class CrontabController extends Controller
 {
-
-     public function __construct(User $user)
-    {
-        $this->user = $user;
-
-    }
-
-    public function action()
+    public static function action()
     {
         #先执行众筹订单静态分红
         $return = self::orderStatusMoney();
         if ($return == "true") {
             self::LeaderTeamPrize();
         }
+
+        // self::Shareholder();
+
     }
 
 
     #把众筹订单写入investments2表中
-    public function insertInvestments2($orderId)
-    {   
-        $order = DB::table('order2')->where('id',$orderId)->first(); 
-        #判断订单存在不存在
-        if (!count($order)) {
-            return 'false';
-        }
+    // public function insertInvestments2($orderId)
+    // {   
+    //     $order = DB::table('order2')->where('id',$orderId)->first(); 
+    //     #判断订单存在不存在
+    //     if (!count($order)) {
+    //         return 'false';
+    //     }
 
-        if ($order->status <= 1) {
-            return 'false';
-        }
+    //     if ($order->status <= 1) {
+    //         return 'false';
+    //     }
 
-        $data = [];
-        $data['user_id'] = $order->user_id;
-        $data['money'] = $order->total_money ;
-        $data['give_money'] = 0;
-        $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
-        $data['order_id'] = $orderId;
-        $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
-        $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
+    //     $data = [];
+    //     $data['user_id'] = $order->user_id;
+    //     $data['money'] = $order->total_money ;
+    //     $data['give_money'] = 0;
+    //     $data['give_allmoney'] = $order->total_money * (1 + ( ( Config2::getConfig(1) ) / 100 )  ) ;
+    //     $data['order_id'] = $orderId;
+    //     $data['created_at'] = date('Y-m-d H:i:s',$order->create_at);
+    //     $data['updated_at'] = date('Y-m-d H:i:s',$order->create_at);
 
-        DB::table('investments2')->insert($data);
+    //     DB::table('investments2')->insert($data);
 
-        return 'true';
-    }
+    //     return 'true';
+    // }
 
 
     #众筹订单静态分红
@@ -203,10 +199,8 @@ class CrontabController extends Controller
     #股东分红奖
     public static function Shareholder()
     {   
-        // $userId = 151;
         $users  = DB::table('user')->select('id','pid')->get();
         $users = json_decode(json_encode($users),true);
-        // dd(self::getCountId([151],$users,1));
         $FiveUser = [];
         $OneUser = [];
         #判断直推有效人数
@@ -252,7 +246,6 @@ class CrontabController extends Controller
         }
 
         $insertD = [];
-        //php获取今日开始时间戳和结束时间戳
         $thismonth = date('m');
         $thisyear = date('Y');
         $startDay = $thisyear . '-' . $thismonth . '-1';
@@ -286,8 +279,6 @@ class CrontabController extends Controller
         if (!empty($insertD)) {
             DB::table('investments2')->insert($insertD);
         }
-        return "true";
-
     }
 
 

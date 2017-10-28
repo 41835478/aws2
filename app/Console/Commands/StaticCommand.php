@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
+use App\Http\Controllers\Admin2\CrontabController as Crontab;
 class StaticCommand extends Command
 {
     /**
@@ -37,6 +37,6 @@ class StaticCommand extends Command
      */
     public function handle()
     {
-        //
+        Crontab::action();
     }
 }

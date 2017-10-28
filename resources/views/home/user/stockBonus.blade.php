@@ -42,61 +42,23 @@
 <div class="content" style="padding-top:48px">
 	<div class="bonus">
 		<h2>
-			<span>&yen;</span><em>8000.00</em>
+			<span>&yen;</span><em>{{$count}}</em>
 		</h2>
 		<p>累计奖励金额</p>
 	</div>
 	<ul style="padding-top:12px;">
+		@foreach ($data as $k=>$v) 
 		<li class="act_list">
 			<img src="/home/images/red01.png" alt="">
 			<div class="act_class">
-				<p class="top_p">十月股东分红</p>
-				<p class="time">2017-03-22 12:35</p>
+				<p class="top_p">股东分红</p>
+				<p class="time">{{$v['created_at']}}</p>
 			</div>
 			<div class="act_money">
-				&yen;<span>1000.00</span>
+				&yen;<span>{{$num}}</span>
 			</div>
 		</li>
-		<li class="act_list">
-			<img src="images/red01.png" alt="">
-			<div class="act_class">
-				<p class="top_p">十月股东分红</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				&yen;<span>1000.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="images/red01.png" alt="">
-			<div class="act_class">
-				<p class="top_p">十月股东分红</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				&yen;<span>1000.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="images/red01.png" alt="">
-			<div class="act_class">
-				<p class="top_p">十月股东分红</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				&yen;<span>1000.00</span>
-			</div>
-		</li>
-		<li class="act_list">
-			<img src="images/red01.png" alt="">
-			<div class="act_class">
-				<p class="top_p">十月股东分红</p>
-				<p class="time">2017-03-22 12:35</p>
-			</div>
-			<div class="act_money">
-				&yen;<span>1000.00</span>
-			</div>
-		</li>
+		@endforeach
 	</ul>
 </div>
 <script>

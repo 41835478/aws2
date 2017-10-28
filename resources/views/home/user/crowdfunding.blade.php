@@ -106,10 +106,10 @@
 	</div>
 </div>
 <script>
-	$('.stock').on('click',function(){
-		addBox('body');
-		outBox('您还不是股东，无法查看股东分红。','stockBonus.html');
-	});
+	// $('.stock').on('click',function(){
+	// 	addBox('body');
+	// 	outBox('您还不是股东，无法查看股东分红。','stockBonus.html');
+	// });
 </script>
 </body>
 </html>

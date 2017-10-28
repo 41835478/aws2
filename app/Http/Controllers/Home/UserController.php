@@ -1348,8 +1348,11 @@ try{
 
     #股东分红
     public function stockBonus()
-    {
-        return view('home.user.stockBonus',compact(''));
+    {   
+        $user_id = $this->checkUser();
+        $data = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>5])->get();        
+        $count = DB::table('balance_records2')->where(['user_id'=>$user_id,'type'=>5])->sum('num');
+        return view('home.user.stockBonus',compact('data','count'));
         
     }
     #爱心奖金
