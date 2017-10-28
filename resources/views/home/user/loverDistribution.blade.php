@@ -144,15 +144,19 @@
         <ul class="bonusList bonusList1" style="display:block">
             @foreach($distributionUsers as $distributionUser)
                 @if($distributionUser->level == 1)
-                <li class="div_clearFloat bonusItem">
-                    <span>1</span>
-                    <img src="/home/images/rank01.png" alt=""/>
-                    <div class="bonus_con">
-                        <p>{{$distributionUser->fromUser->name}}</p>
-                        <span>{{$distributionUser->created_at}} </span>
-                    </div>
-                    <p>+￥{{$distributionUser->num}}</p>
-                </li>
+                    <li class="div_clearFloat bonusItem">
+                        <span>1</span>
+                        @if($distributionUser->fromUser->pic)
+                            <img src="{{asset($distributionUser->fromUser->pic)}}" alt=""/>
+                        @else
+                            <img src="/home/images/rank01.png" alt=""/>
+                        @endif
+                        <div class="bonus_con">
+                            <p>{{$distributionUser->fromUser->name}}</p>
+                            <span>{{$distributionUser->created_at}} </span>
+                        </div>
+                        <p>+￥{{$distributionUser->num}}</p>
+                    </li>
                 @endif
             @endforeach
         </ul>
@@ -161,7 +165,11 @@
                 @if($distributionUser->level == 2)
                     <li class="div_clearFloat bonusItem">
                         <span>1</span>
-                        <img src="/home/images/rank01.png" alt=""/>
+                        @if($distributionUser->fromUser->pic)
+                            <img src="{{asset($distributionUser->fromUser->pic)}}" alt=""/>
+                        @else
+                            <img src="/home/images/rank01.png" alt=""/>
+                        @endif
                         <div class="bonus_con">
                             <p>{{$distributionUser->fromUser->name}}</p>
                             <span>{{$distributionUser->created_at}} </span>
@@ -176,7 +184,11 @@
                 @if($distributionUser->level == 3)
                     <li class="div_clearFloat bonusItem">
                         <span>1</span>
-                        <img src="/home/images/rank01.png" alt=""/>
+                        @if($distributionUser->fromUser->pic)
+                            <img src="{{asset($distributionUser->fromUser->pic)}}" alt=""/>
+                        @else
+                            <img src="/home/images/rank01.png" alt=""/>
+                        @endif
                         <div class="bonus_con">
                             <p>{{$distributionUser->fromUser->name}}</p>
                             <span>{{$distributionUser->created_at}} </span>
