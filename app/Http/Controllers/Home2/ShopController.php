@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home2;
 use App\Http\Controllers\Controller;
 use App\Http\Model\BalanceRecord2;
 use App\Http\Model\Orderinfo2 as Orderinfo;
+use App\Http\Model\User;
 use App\Http\Services\LimitPayService;
 use App\Services\AccountRecordService;
 use App\Services\InvestmentService;
@@ -249,6 +250,7 @@ class ShopController extends Controller
     {
         $auth = new AuthService();
         $user_id = $auth->rememberDecrypt(\Session::get('home_user_id'));
+
         if (empty($user_id)) {
             return redirect(url('alipay/index', ['order_id' => $_REQUEST['order_id']]));
 //            "{{url('alipay/index',['order_id'=>$_REQUEST[\'order_id\']])}}"

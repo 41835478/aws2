@@ -12,26 +12,37 @@ class User extends Model
     protected $table = 'user';
     public $timestamps = false;
 
-    protected $fillable = ['rob_point_num_a', 'rob_point_num_b','rob_point_num_c'];//开启白名单字段
+    protected $fillable = ['rob_point_num_a', 'rob_point_num_b', 'rob_point_num_c'];//开启白名单字段
+
+
+
+    public function downUsers() //获取下级用户
+    {
+        return $this->hasMany(User::class, 'pid', 'id');
+    }
+
+    public function upUser()//获取上级用户
+    {
+        return $this->belongsTo(User::class,'pid','id');
+    }
     /**
      * @return string 根据id获取用户信息
      */
-
     public function getuserinfo($uid)
     {
-       	$users=User::where('id',$uid)->first();
-       		
+        $users = User::where('id', $uid)->first();
+
         return $users;
     }
 
     public function investments()
     {
-        return $this->hasMany(Investment2::class,'user_id','id');
+        return $this->hasMany(Investment2::class, 'user_id', 'id');
     }
 
     public function order2()
     {
-        return $this->hasMany(Order2::class,'user_id','id');
+        return $this->hasMany(Order2::class, 'user_id', 'id');
     }
 
 

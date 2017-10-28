@@ -22,6 +22,7 @@ class DistributionEvent
      */
     public function __construct($data = [])
     {
+        \Log::info('分销开始');
         $this->data = $data;
     }
 

@@ -8,9 +8,7 @@ use App\Http\Model\Config2;
 use App\Http\Model\User;
 use App\Services\AccountRecordService;
 use App\Services\ThreeRecordService;
-use Carbon\Carbon;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+
 use Illuminate\Support\Facades\Log;
 
 class DistributionEventListener
@@ -57,8 +55,9 @@ class DistributionEventListener
         if ($level > 0 && $level <= $maxLevel) {
 
             $user = User::find($user_id);
-
+            Log::info('用户',[$user->toArray()]);
             $upUser = $user->upUser;
+
             if (count($upUser) > 0) {//一级
                 Log::info('上级用户',[$upUser->toArray()]);
                 if ($level == 1 && $user->consumer_num == 1) { //第一级返佣，并且用户第一消费，给上级推荐人加1
@@ -112,7 +111,7 @@ class DistributionEventListener
                         if ($res) {
                             $res1 = $this->accountRecordService->setAccountRecord($upUser->id, $userIncome, BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, $level . '代分销奖金', 1);
                             if ($res1) {
-                                $res2 = $upUser->increment('balance', $userIncome);
+                                $res2 = $upUser->increment('account', $userIncome);
                                 if ($res2) {
                                     \Log::info($level . '级返佣成功');
                                     event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,]));
