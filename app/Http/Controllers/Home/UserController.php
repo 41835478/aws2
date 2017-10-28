@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Http\Model\DistributionRecord2;
 use Illuminate\Http\Request;
 
 use App\Http\Model\Config2;
@@ -1367,7 +1368,12 @@ try{
     #爱心分销奖
     public function loverDistribution()
     {
-        return view('home.user.loverDistribution',compact(''));
+        $user_id = $this->checkUser();
+
+        $distributionUsers = DistributionRecord2::where('to_id',$user_id)->get()->load('fromUser');
+        $money = $distributionUsers->whereIn('level',[4,5,6,7,8,9])->sum('num');
+
+        return view('home.user.loverDistribution',compact('distributionUsers','money'));
     }
 
     #爱心领导奖

@@ -14,7 +14,14 @@ class User extends Model
 
     protected $fillable = ['rob_point_num_a', 'rob_point_num_b', 'rob_point_num_c'];//开启白名单字段
 
-
+    public function fromDistribution()
+    {
+        return $this->hasMany(DistributionRecord2::class,'from_id','id');
+    }
+    public function toDistribution()
+    {
+        return $this->hasMany(DistributionRecord2::class,'to_id','id');
+    }
 
     public function downUsers() //获取下级用户
     {
