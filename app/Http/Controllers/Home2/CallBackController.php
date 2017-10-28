@@ -40,8 +40,7 @@ class CallBackController extends Controller
                     $order->status=2;
                     $order->type=1;
                     if($order->save()){
-                        $user = $order->user;
-                        $res = $this->investmentService->investment($user,$order);
+                        $res = $this->investmentService->investment($order->user_id,$order->id);
                         if($res){
                             \Log::info('微信回调分销成功');
                             echo 'success';

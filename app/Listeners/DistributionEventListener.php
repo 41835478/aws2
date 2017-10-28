@@ -56,6 +56,13 @@ class DistributionEventListener
 
             $user = User::find($user_id);
             Log::info('用户',[$user->toArray()]);
+            if ($level == 1) {
+
+                $user = User::find($user_id);
+
+            } else {
+                $user = User::find($event->data['upUser_id']);
+            }
             $upUser = $user->upUser;
 
             if (count($upUser) > 0) {//一级
@@ -107,14 +114,14 @@ class DistributionEventListener
 //                        if (($dayMoney + $userIncome) > $money) {//把超出的收益减去;
 //                            $userIncome = $money - $dayMoney;
 //                        }
-                        $res = $this->threeRecordService->setRecord($user_id, $upUser->id, $userIncome, $level . '代分销奖金');
+                        $res = $this->threeRecordService->setRecord($user_id, $upUser->id,$level, $userIncome, $level . '代分销奖金');
                         if ($res) {
                             $res1 = $this->accountRecordService->setAccountRecord($upUser->id, $userIncome, BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, $level . '代分销奖金', 1);
                             if ($res1) {
                                 $res2 = $upUser->increment('account', $userIncome);
                                 if ($res2) {
                                     \Log::info($level . '级返佣成功');
-                                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,]));
+                                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,'upUser_id'=>$upUser->id]));
                                 } else {
                                     \Log::info($level . '级动态余额失败');
                                 }
@@ -130,6 +137,8 @@ class DistributionEventListener
 //                    }
                 }else{
                     Log::info('直推人数不够');
+                    //继续奖励下一级
+                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,'upUser_id'=>$upUser->id]));
                 }
 
             } else {

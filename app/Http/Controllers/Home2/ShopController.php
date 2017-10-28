@@ -390,11 +390,11 @@ class ShopController extends Controller
         //用户余额扣除
         DB::table('user')->where(['id' => $user->id])->decrement('account', $order->total_money);
 
-        $accountRecord = $this->accountService->setAccountRecord($user_id, $order->total_money, BalanceRecord2::TYPE_INVESTMENT, '参加众筹', 2);
+//        $accountRecord = $this->accountService->setAccountRecord($user_id, $order->total_money, BalanceRecord2::TYPE_INVESTMENT, '参加众筹', 2);
 
-        if ($accountRecord) {
+//        if ($accountRecord) {
             $account['user_id'] = $user_id;
-            $account['recode_info'] = '购买商品';
+            $account['recode_info'] = '购买众筹商品';
             $account['flag'] = 2;
             $account['money'] = $order->total_money;
             $account['status'] = 1;
@@ -412,7 +412,7 @@ class ShopController extends Controller
                 echo 3;
                 exit;
             }
-        }
+//        }
 
         echo 3;
     }
