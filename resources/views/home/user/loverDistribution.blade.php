@@ -130,7 +130,7 @@
 <div class="content" style="padding-top:48px;padding-bottom:0">
     <div class="bonus">
         <h2>
-            <span>&yen;</span><em>8000.00</em>
+            <span>&yen;</span><em>{{$distributionUsers->sum('num')}}</em>
         </h2>
         <p>累计奖励金额</p>
     </div>
