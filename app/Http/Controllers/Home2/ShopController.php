@@ -361,6 +361,7 @@ class ShopController extends Controller
     // 余额支付
     public function order_pay()
     {
+
         $order_id = $_REQUEST['order_id'];
         $password = $_REQUEST['password'];
         $auth = new AuthService();
@@ -371,6 +372,7 @@ class ShopController extends Controller
             exit;
         }
         $order = DB::table('order2')->where(['id' => $order_id])->first();
+
         if ($order->total_money > $user->account) {
             echo 3;
             exit;
@@ -397,7 +399,8 @@ class ShopController extends Controller
             $account['create_at'] = time();
             $account['type'] = 2;
             DB::table('incomerecode')->insert($account);
-            $res = $this->investmentService->investment($user->id, $order);
+            $res = $this->investmentService->investment($user->id, $order->id);
+
             if ($res) {
                 \Log::info('余额支付分销成功');
                 echo 1;

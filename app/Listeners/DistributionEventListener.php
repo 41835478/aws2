@@ -49,7 +49,6 @@ class DistributionEventListener
             8 => 12,
             9 => 13,
         ];
-        //三级分销返佣;
         \Log::info('分销返佣开始');
         $totalMoney = $event->data['money'];//投资订单总价格
         $level = $event->data['level'];//几级返佣
@@ -61,6 +60,7 @@ class DistributionEventListener
 
             $upUser = $user->upUser;
             if (count($upUser) > 0) {//一级
+                Log::info('上级用户',[$upUser->toArray()]);
                 if ($level == 1 && $user->consumer_num == 1) { //第一级返佣，并且用户第一消费，给上级推荐人加1
                     $upUser->increment('recommend_count');
                 }

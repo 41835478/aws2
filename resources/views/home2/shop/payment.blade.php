@@ -338,7 +338,7 @@ $(".present_centt").on("click", function (){
     				alert('余额不足');
     			}else if(res == 2){
     				alert('密码错误');
-    			}else{
+    			}else if (res == 1){
     				alert('支付成功');
     				window.location.href = '/home2/shop/paySuccess';
     			}
