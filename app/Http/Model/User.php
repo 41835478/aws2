@@ -29,6 +29,11 @@ class User extends Model
         return $this->hasMany(Investment2::class,'user_id','id');
     }
 
+    public function order2()
+    {
+        return $this->hasMany(Order2::class,'user_id','id');
+    }
+
 
 
 

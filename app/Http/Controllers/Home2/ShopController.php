@@ -399,9 +399,11 @@ class ShopController extends Controller
             DB::table('incomerecode')->insert($account);
             $res = $this->investmentService->investment($user->id, $order);
             if ($res) {
+                \Log::info('余额支付分销成功');
                 echo 1;
                 exit;
             } else {
+                \Log::info('余额支付分销失败');
                 echo 3;
                 exit;
             }

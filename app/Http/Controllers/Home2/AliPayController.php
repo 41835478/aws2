@@ -5,6 +5,7 @@ use App\Http\Model\Incomerecode;
 use App\Http\Model\Order2 as Order;
 use App\Http\Model\User;
 use App\Http\Services\RowCommonService;
+use App\Services\InvestmentService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -25,10 +26,11 @@ class AliPayController extends Controller
     private $cacert="http://www.tjzbdkj.com/Data/AliPayCert/cacert.pem";//证书demo中有
 
     protected $rowCommonService;
-
-    public function __construct(RowCommonService $rowCommonService)
+    protected $investmentService;
+    public function __construct(RowCommonService $rowCommonService,InvestmentService $investmentService)
     {   
         $this->rowCommonService=$rowCommonService;
+        $this->investmentService = $investmentService;
     }
 
     public function index(Request $request,$order_id=0)
@@ -398,8 +400,10 @@ class AliPayController extends Controller
                 // if($order && $order->status==1 && ($order->total_money==$total_amount)) {
                 if($order && $order->status==1 && ($total_amount==0.01)) {
                     #处理逻辑
-                    if(Order::where(['order_code'=>$out_trade_no])->update(['status'=>2])){
-                        
+                    if(Order::where(['order_code'=>$out_trade_no])->update(['status'=>2,'trade_no'=>$trade_no])){
+                        $user = $order->user;
+                        $res = $this->investmentService->investment($user,$order);
+                        \Log::info('分销结果',[$res]);
                         return redirect(url('users/index'));
                     };
 

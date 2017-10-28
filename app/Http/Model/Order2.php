@@ -31,4 +31,9 @@ class Order2 extends Model
     {
         return $this->hasOne(Investment2::class,'order_id','id');
      }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+     }
 }

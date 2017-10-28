@@ -7,6 +7,7 @@ use App\Http\Model\Order2 as Order;
 use App\Http\Model\User;
 use App\Http\Services\RowCommonService;
 use App\Http\Services\WxPayService;
+use App\Services\InvestmentService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
@@ -16,9 +17,10 @@ class CallBackController extends Controller
 {
     protected $WxPayService;
     protected $rowCommonService;
-
-    public function __construct(WxPayService $wxPayService,RowCommonService $rowCommonService)
+    protected $investmentService;
+    public function __construct(WxPayService $wxPayService,RowCommonService $rowCommonService,InvestmentService $investmentService)
     {
+        $this->investmentService = $investmentService;
         $this->WxPayService=$wxPayService;
         $this->rowCommonService=$rowCommonService;
     }
@@ -35,7 +37,19 @@ class CallBackController extends Controller
                 $order=Order::where(['order_code'=>strval($result['out_trade_no'])])->first();//修改订单
                 if($order&&$order->status==1){
                     #处理逻辑
-                    
+                    $order->status=2;
+                    $order->type=1;
+                    if($order->save()){
+                        $user = $order->user;
+                        $res = $this->investmentService->investment($user,$order);
+                        if($res){
+                            \Log::info('微信回调分销成功');
+                            echo 'success';
+                        }else{
+                            \Log::info('微信回调分销失败');
+                            echo 'fail';
+                        }
+                    }
                 }else{
                     echo 'success';
                 }
