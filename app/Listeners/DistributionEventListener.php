@@ -8,9 +8,7 @@ use App\Http\Model\Config2;
 use App\Http\Model\User;
 use App\Services\AccountRecordService;
 use App\Services\ThreeRecordService;
-use Carbon\Carbon;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+
 use Illuminate\Support\Facades\Log;
 
 class DistributionEventListener
@@ -49,7 +47,6 @@ class DistributionEventListener
             8 => 12,
             9 => 13,
         ];
-        //三级分销返佣;
         \Log::info('分销返佣开始');
         $totalMoney = $event->data['money'];//投资订单总价格
         $level = $event->data['level'];//几级返佣
@@ -58,9 +55,18 @@ class DistributionEventListener
         if ($level > 0 && $level <= $maxLevel) {
 
             $user = User::find($user_id);
+            Log::info('用户',[$user->toArray()]);
+            if ($level == 1) {
 
+                $user = User::find($user_id);
+
+            } else {
+                $user = User::find($event->data['upUser_id']);
+            }
             $upUser = $user->upUser;
+
             if (count($upUser) > 0) {//一级
+                Log::info('上级用户',[$upUser->toArray()]);
                 if ($level == 1 && $user->consumer_num == 1) { //第一级返佣，并且用户第一消费，给上级推荐人加1
                     $upUser->increment('recommend_count');
                 }
@@ -108,14 +114,14 @@ class DistributionEventListener
 //                        if (($dayMoney + $userIncome) > $money) {//把超出的收益减去;
 //                            $userIncome = $money - $dayMoney;
 //                        }
-                        $res = $this->threeRecordService->setRecord($user_id, $upUser->id, $userIncome, $level . '代分销奖金');
+                        $res = $this->threeRecordService->setRecord($user_id, $upUser->id,$level, $userIncome, $level . '代分销奖金');
                         if ($res) {
                             $res1 = $this->accountRecordService->setAccountRecord($upUser->id, $userIncome, BalanceRecord2::TYPE_DISTRIBUTION_PRIZE, $level . '代分销奖金', 1);
                             if ($res1) {
-                                $res2 = $upUser->increment('balance', $userIncome);
+                                $res2 = $upUser->increment('account', $userIncome);
                                 if ($res2) {
                                     \Log::info($level . '级返佣成功');
-                                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,]));
+                                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,'upUser_id'=>$upUser->id]));
                                 } else {
                                     \Log::info($level . '级动态余额失败');
                                 }
@@ -131,6 +137,8 @@ class DistributionEventListener
 //                    }
                 }else{
                     Log::info('直推人数不够');
+                    //继续奖励下一级
+                    event(new DistributionEvent(['level' => $level + 1, 'money' => $totalMoney, 'user_id' => $user_id,'upUser_id'=>$upUser->id]));
                 }
 
             } else {

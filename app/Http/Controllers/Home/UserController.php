@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Http\Model\DistributionRecord2;
+use App\Http\Model\Goods2;
+use App\Http\Model\Order2;
+use App\Http\Model\Orderinfo2;
 use Illuminate\Http\Request;
 
 use App\Http\Model\Config2;
@@ -1226,9 +1230,9 @@ try{
     static function userorderinfo($i,$uid){
        
        
-        $list=Order::where('user_id',$uid)->where('status',$i)->orderBy('id','desc')->get();
+        $orders1=Order::where('user_id',$uid)->where('status',$i)->orderBy('id','desc')->get();
 
-        foreach ($list as $k => $v) {
+        foreach ($orders1 as $k => $v) {
             $info=Orderinfo::select(['order_id','price','num','name','goods_id'])->where('order_id',$v['id'])->get();
                 foreach ($info as $key => $value) {
                     $goods=Goods::select(['id','pic','name'])->where('id',$value['goods_id'])->first();
@@ -1237,9 +1241,29 @@ try{
 
                 }
 
-                $list[$k]->info = $info;
+                $orders1[$k]->info = $info;
 
         
+        }
+        $orders2=Order2::where('user_id',$uid)->where('status',$i)->orderBy('id','desc')->get();
+
+        foreach ($orders2 as $k => $v) {
+            $info=Orderinfo2::select(['order_id','price','num','name','goods_id'])->where('order_id',$v['id'])->get();
+                foreach ($info as $key => $value) {
+                    $goods=Goods2::select(['id','pic','name'])->where('id',$value['goods_id'])->first();
+                    $info[$key]['name']=$goods['name'];
+                    $info[$key]['pic']=$goods['pic'];
+
+                }
+
+            $orders2[$k]->info = $info;
+
+
+        }
+        $list = $orders1->merge($orders2);
+
+        if($i == 1){
+            return $orders1;
         }
         return $list;
     }
@@ -1368,7 +1392,12 @@ try{
     #爱心分销奖
     public function loverDistribution()
     {
-        return view('home.user.loverDistribution',compact(''));
+        $user_id = $this->checkUser();
+
+        $distributionUsers = DistributionRecord2::where('to_id',$user_id)->get()->load('fromUser');
+        $money = $distributionUsers->whereIn('level',[4,5,6,7,8,9])->sum('num');
+
+        return view('home.user.loverDistribution',compact('distributionUsers','money'));
     }
 
     #爱心领导奖

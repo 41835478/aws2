@@ -401,8 +401,8 @@ class AliPayController extends Controller
                 if($order && $order->status==1 && ($total_amount==0.01)) {
                     #处理逻辑
                     if(Order::where(['order_code'=>$out_trade_no])->update(['status'=>2,'trade_no'=>$trade_no])){
-                        $user = $order->user;
-                        $res = $this->investmentService->investment($user,$order);
+
+                        $res = $this->investmentService->investment($order->user_id,$order->id);
                         \Log::info('分销结果',[$res]);
                         return redirect(url('users/index'));
                     };

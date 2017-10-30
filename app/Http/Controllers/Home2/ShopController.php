@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home2;
 use App\Http\Controllers\Controller;
 use App\Http\Model\BalanceRecord2;
 use App\Http\Model\Orderinfo2 as Orderinfo;
+use App\Http\Model\User;
 use App\Http\Services\LimitPayService;
 use App\Services\AccountRecordService;
 use App\Services\InvestmentService;
@@ -249,6 +250,7 @@ class ShopController extends Controller
     {
         $auth = new AuthService();
         $user_id = $auth->rememberDecrypt(\Session::get('home_user_id'));
+
         if (empty($user_id)) {
             return redirect(url('alipay/index', ['order_id' => $_REQUEST['order_id']]));
 //            "{{url('alipay/index',['order_id'=>$_REQUEST[\'order_id\']])}}"
@@ -361,6 +363,7 @@ class ShopController extends Controller
     // 余额支付
     public function order_pay()
     {
+
         $order_id = $_REQUEST['order_id'];
         $password = $_REQUEST['password'];
         $auth = new AuthService();
@@ -371,6 +374,7 @@ class ShopController extends Controller
             exit;
         }
         $order = DB::table('order2')->where(['id' => $order_id])->first();
+
         if ($order->total_money > $user->account) {
             echo 3;
             exit;
@@ -386,18 +390,19 @@ class ShopController extends Controller
         //用户余额扣除
         DB::table('user')->where(['id' => $user->id])->decrement('account', $order->total_money);
 
-        $accountRecord = $this->accountService->setAccountRecord($user_id, $order->total_money, BalanceRecord2::TYPE_INVESTMENT, '参加众筹', 2);
+//        $accountRecord = $this->accountService->setAccountRecord($user_id, $order->total_money, BalanceRecord2::TYPE_INVESTMENT, '参加众筹', 2);
 
-        if ($accountRecord) {
+//        if ($accountRecord) {
             $account['user_id'] = $user_id;
-            $account['recode_info'] = '购买商品';
+            $account['recode_info'] = '购买众筹商品';
             $account['flag'] = 2;
             $account['money'] = $order->total_money;
             $account['status'] = 1;
             $account['create_at'] = time();
             $account['type'] = 2;
             DB::table('incomerecode')->insert($account);
-            $res = $this->investmentService->investment($user->id, $order);
+            $res = $this->investmentService->investment($user->id, $order->id);
+
             if ($res) {
                 \Log::info('余额支付分销成功');
                 echo 1;
@@ -407,7 +412,7 @@ class ShopController extends Controller
                 echo 3;
                 exit;
             }
-        }
+//        }
 
         echo 3;
     }
