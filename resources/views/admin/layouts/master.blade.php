@@ -91,9 +91,10 @@
 
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">众筹数据</span><span
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">众筹管理</span><span
                                 class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="{{url('admin2/investments')}}">众筹列表</a>
                         <li><a class="J_menuItem" href="{{url('admin2/data/index')}}">数据统计</a>
                         <li><a class="J_menuItem" href="{{url('admin2/data/configindex')}}">参数配置</a>
                     </ul>

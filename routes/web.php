@@ -48,6 +48,7 @@ Route::group(['namespace' => 'Admin','middleware'=>'admin'], function () {
 
 #众筹专区后台
 Route::group(['namespace' => 'Admin2','middleware'=>'admin'], function () {
+    require_once base_path('routes/admin2/investment.php');
     require_once base_path('routes/admin2/goodsClass.php');//商品分类
     require_once base_path('routes/admin2/goods.php');//商品管理
     require_once base_path('routes/admin2/order.php');
