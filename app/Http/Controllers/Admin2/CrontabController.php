@@ -216,7 +216,7 @@ class CrontabController extends Controller
             }
         }
 
-        $userss  = DB::table('user')->where(['is_zhongchou'=>2])->select('id','pid')->get();
+        $userss  = DB::table('user')->where('consumer_num','>',0)->select('id','pid')->get();
         $userss  = json_decode(json_encode($userss),true);
         #判断直推有效团队
         $team = [];
@@ -326,7 +326,7 @@ class CrontabController extends Controller
      * @return 查询级别的用户下级
      */
     public static function getYouXiaoChilden($uid,$num = 1){
-        $user1 = DB::table('user')->whereIn('pid',$uid)->where(['is_zhongchou'=>2])->select('id','pid')->get();
+        $user1 = DB::table('user')->whereIn('pid',$uid)->where('consumer_num','>',0)->select('id','pid')->get();
         $user1 = json_decode(json_encode($user1),true);
         if (empty($user1)) {
             return [];

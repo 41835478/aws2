@@ -145,6 +145,7 @@ class UserController  extends BaseController
         
         $love = $love - $love1;
         $love = sprintf("%1.2f",$love);
+        // $love = DB::table('investments2')->where(['user_id'=>$uid])->sum('money');
         return view('home.user.index',compact('users','pusers','countt','love'));
     }
 
