@@ -111,4 +111,4 @@ Route::get('uses.locking',function(){
 });
 
 
-Route::get('test/insert/{orderId}','Admin2\CrontabController@Shareholder');
+Route::get('test/insert','Admin2\CrontabController@action');
