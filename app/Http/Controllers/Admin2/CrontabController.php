@@ -20,7 +20,7 @@ class CrontabController extends Controller
     {
         #先执行众筹订单静态分红
         $return = self::orderStatusMoney();
-        
+
         if ($return == "true") {
             self::LeaderTeamPrize();
         }
