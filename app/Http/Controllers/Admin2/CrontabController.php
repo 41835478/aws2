@@ -20,6 +20,7 @@ class CrontabController extends Controller
     {
         #先执行众筹订单静态分红
         $return = self::orderStatusMoney();
+        
         if ($return == "true") {
             self::LeaderTeamPrize();
         }
@@ -66,12 +67,15 @@ class CrontabController extends Controller
         if (!count($orderInfo)) {
             return 'false';
         }        
+        $time = time();
         $data = [];
+        $editData = [];
         #组合详情数组
         foreach ($orderInfo as $k => $v) {
             #修改发送金额
             $edit = [];
             $mm = 0;
+            $edit['id'] = $v->id;
             $money = $v->give_allmoney * ( Config2::getConfig(3) / 100 );
             if ( ($money + $v->give_money) >= $v->give_allmoney ) {
                 $edit['status'] = 2;
@@ -85,16 +89,30 @@ class CrontabController extends Controller
                 $mm = $money;
             }
             #修改订单分红金额
-            $return = DB::table('investments2')->where('id',$v->id)->update($edit);
+            $editData[] = $edit;
+            // $return = DB::table('investments2')->where('id',$v->id)->update($edit);
             // if (!$return) {
             //     file_put_contents("jingtai.txt",$v->id.":".$money."元---".date('Y-m-d H:i:s'),FILE_APPEND );
             // }
             $data[] = self::addData($v,$mm);
         }
-
-        DB::table('balance_records2')->insert($data);
-        return 'true';
-
+        DB::beginTransaction();
+        try {
+            $model = new Investment2();
+            $return = $model->updateBatch($editData);
+            $return1= DB::table('balance_records2')->insert($data);
+            if ($return && $return1) {
+                DB::commit();
+                return "true";
+            }
+            DB::rollback();
+            return "false";
+        } catch (Exception $e) {
+            DB::rollback();
+            //写错误日志
+            file_put_contents("staticMoney.txt","众筹订单静态分红"."------".$e->getMessage()."---".date('Y-m-d H:i:s').PHP_EOL,FILE_APPEND );
+            return "false";
+        }
     }
 
 
