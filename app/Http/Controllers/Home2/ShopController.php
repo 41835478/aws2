@@ -9,6 +9,7 @@ use App\Http\Model\User;
 use App\Http\Services\LimitPayService;
 use App\Services\AccountRecordService;
 use App\Services\InvestmentService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Services\AuthService;
@@ -251,6 +252,13 @@ class ShopController extends Controller
         $auth = new AuthService();
         $user_id = $auth->rememberDecrypt(\Session::get('home_user_id'));
 
+        $user = User::find($user_id);
+        $result = $this->investmentService->money($user);
+        if ($result == 1) { //用户投资超额 300000
+            return back()->withErrors('账号投资超额');
+        } elseif ($result == 2) {//今日投资超额30000
+            return back()->withErrors('今日投资超额');
+        }
         if (empty($user_id)) {
             return redirect(url('alipay/index', ['order_id' => $_REQUEST['order_id']]));
 //            "{{url('alipay/index',['order_id'=>$_REQUEST[\'order_id\']])}}"
@@ -368,7 +376,12 @@ class ShopController extends Controller
         $password = $_REQUEST['password'];
         $auth = new AuthService();
         $user_id = $auth->rememberDecrypt(\Session::get('home_user_id'));
-        $user = DB::table('user')->where(['id' => $user_id])->first();
+        $user = User::find($user_id);
+        $result = $this->investmentService->money($user);
+        if ($result) { //用户投资超额或者今日投资超额
+            echo 3;
+            exit;
+        }
         if (md5($password) != $user->paypwd) {
             echo 2;
             exit;
@@ -393,25 +406,25 @@ class ShopController extends Controller
 //        $accountRecord = $this->accountService->setAccountRecord($user_id, $order->total_money, BalanceRecord2::TYPE_INVESTMENT, '参加众筹', 2);
 
 //        if ($accountRecord) {
-            $account['user_id'] = $user_id;
-            $account['recode_info'] = '购买众筹商品';
-            $account['flag'] = 2;
-            $account['money'] = $order->total_money;
-            $account['status'] = 1;
-            $account['create_at'] = time();
-            $account['type'] = 2;
-            DB::table('incomerecode')->insert($account);
-            $res = $this->investmentService->investment($user->id, $order->id);
+        $account['user_id'] = $user_id;
+        $account['recode_info'] = '购买众筹商品';
+        $account['flag'] = 2;
+        $account['money'] = $order->total_money;
+        $account['status'] = 1;
+        $account['create_at'] = time();
+        $account['type'] = 2;
+        DB::table('incomerecode')->insert($account);
+        $res = $this->investmentService->investment($user->id, $order->id);
 
-            if ($res) {
-                \Log::info('余额支付分销成功');
-                echo 1;
-                exit;
-            } else {
-                \Log::info('余额支付分销失败');
-                echo 3;
-                exit;
-            }
+        if ($res) {
+            \Log::info('余额支付分销成功');
+            echo 1;
+            exit;
+        } else {
+            \Log::info('余额支付分销失败');
+            echo 3;
+            exit;
+        }
 //        }
 
         echo 3;

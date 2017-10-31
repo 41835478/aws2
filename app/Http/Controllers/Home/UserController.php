@@ -65,7 +65,7 @@ class UserController  extends BaseController
         if (mb_strlen($users->name,'utf8') <=5) {
             $users->name = '　  '.$users->name;
         }
-        if($users['level'] != 1){
+        if($users['level'] != 1 && $users['consumer_num'] == 0){
         	 return redirect('users/index');
         }                       
         return view('home.user.Qrcode_new',compact('users'));
