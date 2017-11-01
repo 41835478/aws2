@@ -139,11 +139,7 @@
                 </a>
             </li>
             <li class="centerItem">
-<<<<<<< HEAD
                 <a href="{{url('users/shippingaddress')}}" class="a_jump">
-=======
-                <a href="{{asset('home/images/person08.png')}}" class="a_jump">
->>>>>>> ac9acc3c5607f67b0ff1b21a2ddc58c712a56b6b
                     <img src="{{asset('home/images/person08.png')}}" alt=""/>
                     <span>收货地址</span>
                     <i class="iconfont icon-you"></i>
