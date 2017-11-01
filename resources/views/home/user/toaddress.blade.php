@@ -98,7 +98,7 @@
 		</li>
 	</ul>
 	<div class="addressDetail">
-		<textarea class="demo"  id="demo"  placeholder="请填写详细地址，不少于5个字"></textarea>
+		<textarea class="demo"  id="demo"  placeholder="请填写详细地址"></textarea>
 	</div>
 	<div class="setDefault">
 		<p class="div_left">设为默认</p>
