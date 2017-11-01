@@ -66,7 +66,6 @@
 </div>
 </body>
 
-
 <script type="text/javascript">
 function addressEdit(id){
 	let gh = location.search.split('=')[1];

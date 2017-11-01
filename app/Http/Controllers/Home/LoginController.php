@@ -40,10 +40,13 @@ class LoginController extends BaseController
         $dd['name'] = '默认昵称'.rand(100,10000);
         $findPhone=User::where('phone',$data['phone'])->first();        
         if(!$findPhone){
-            if (Cache::has('registerCode1')) {
-                if ($data['code'] == Cache::get('registerCode1')) {
-                    $dd['pwd'] = md5($data['code']);
-                    $dd['paypwd'] = md5($data['code']);
+            // if (Cache::has('registerCode1')) {
+                // if ($data['code'] == Cache::get('registerCode1')) {
+                    $dd['pwd'] = md5(123456);
+                    $dd['paypwd'] = md5(123456);
+
+                    // $dd['pwd'] = md5($data['code']);
+                    // $dd['paypwd'] = md5($data['code']);
                     $dd['create_at'] = time();
                     $dd['update_at'] = time();
                     $res = User::insertGetId($dd);
@@ -54,16 +57,18 @@ class LoginController extends BaseController
                         }
                         session(['home_user_id'=>$result]);
                         session(['mobile' => $data['phone']]);
-                        session(['pwd' => $data['code']]);
-                        Cache::pull('registerCode1');
+                        // session(['pwd' => $data['code']]);
+                        session(['pwd' => 123456]);
+
+                        // Cache::pull('registerCode1');
 //                                        session()->forget('registerCode');
                         return $this->ajaxMessage(true, '注册成功', ['flag' => 2]);
                     }
                     return $this->ajaxMessage(false, '注册失败');
-                }
-                return $this->ajaxMessage(false, '验证码不正确');
-            }
-            return $this->ajaxMessage(false, '验证码已失效，请重新获取');
+                // }
+                // return $this->ajaxMessage(false, '验证码不正确');
+            // }
+            // return $this->ajaxMessage(false, '验证码已失效，请重新获取');
         }
         return $this->ajaxMessage(false, '该手机号已经注册');
     }

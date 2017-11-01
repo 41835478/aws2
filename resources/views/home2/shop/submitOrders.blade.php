@@ -103,7 +103,15 @@
 			<p class="div_left">商品总额</p>
 			<p class="div_right">￥{{ $all_money }}</p>
 		</div>
-		
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 	</div>
 </div>
 <footer class="footer">

@@ -89,10 +89,13 @@
 				data:{phone:phone},
 				success:function(data){
 					alert(data.message);
+					if (data.status == true) {
+						time("#fetchCode");
+					}
 				}
 			});
 		}
-		time("#fetchCode");
+		
 	})
 	//登录
 	$('.register_btn').on('click',function(){

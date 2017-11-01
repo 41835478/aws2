@@ -83,7 +83,7 @@
         <input style="margin:0;border:0;height:60px;line-height: 60px;" type="number" placeholder="短信验证码" name="code" class="code num"><button id="code" type="button" class="yzbtn" >获取验证码</button>
 
   </div>
-		<em>注：最低提现额度为50元，10%作为平台维护费 15%作为消费积分
+		<em>注：最低提现额度为50元，提现金额为{{$beishu}}的倍数,10%作为平台维护费 15%作为消费积分
     </em>
 
 
@@ -249,6 +249,12 @@ window.onload=function(){
               window.location.reload();
             	return false;
             }
+
+            if ( num % {{$beishu}} != 0 ) {
+              alert('提现金额为50的倍数');
+              return false;              
+            }
+
             if(code==""){
               alert('请输入验证码');
               window.location.reload();

@@ -1,0 +1,1 @@
+<?phpRoute::get('admin2/investments','InvestmentController@index');

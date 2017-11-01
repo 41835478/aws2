@@ -36,10 +36,14 @@ class ShopController extends Controller{
         $lunbo = DB::table(self::LUNBO)->where(['type'=>1,'status'=>0])->get();    //轮播图
         $goods = DB::table(self::GOODS)->orWhereIn('type',['4','5','6'])->where(['status'=>1])->get();
         $zcgoods = DB::table('goods2')->where(['status'=>1])->get();
+        $auth = new AuthService();
+        $user_id = $auth->rememberDecrypt(\Session::get('home_user_id'));
+        $users = DB::table('user')->where(['id'=>$user_id])->value('level');
         $return = [
             'lunbo'=>$lunbo,
             'goods'=>$goods,
-            'zcgoods'=>$zcgoods
+            'zcgoods'=>$zcgoods,
+            'level'=>$users
         ];
 
   

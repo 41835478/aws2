@@ -62,10 +62,11 @@ class UserController  extends BaseController
         $uid=$this->checkUser();
         $t = new User;
         $users = $t->getuserinfo($uid); 
+
         if (mb_strlen($users->name,'utf8') <=5) {
             $users->name = '　  '.$users->name;
         }
-        if($users['level'] != 1){
+        if($users['level'] != 1 && $users['consumer_num'] == 0){
         	 return redirect('users/index');
         }                       
         return view('home.user.Qrcode_new',compact('users'));
@@ -248,14 +249,15 @@ class UserController  extends BaseController
     	$uid=$this->checkUser();
     	$t = new User;
     	$users=$t->getuserinfo($uid);
-    	return view('home.user.withdrawals',compact('users')); 	
+        $beishu = Config2::getConfig(29);
+    	return view('home.user.withdrawals',compact('users','beishu')); 	
     }
     #转账提交
     public function editaccount(Request $request){
     	$uid=$this->checkUser();
     	$t = new User;
     	$users=$t->getuserinfo($uid);
-
+        $beishu = Config2::getConfig(29);
     	$post=$request->input();
     	if($post['id']=='' || $post['num']=='' ){
     		return $this->ajaxMessage(false,'参数错误');
@@ -263,6 +265,11 @@ class UserController  extends BaseController
     	if($post['num'] < 50){
     		return $this->ajaxMessage(false,'数量最低为50');
     	}
+
+        if ( $post['num'] % $beishu !=0 ) {
+            return $this->ajaxMessage(false,'提现金额为'.$beishu.'的倍数');
+        }
+        
         #判断直推会员
         $countzhi=User::where('pid',$uid)->count();
         

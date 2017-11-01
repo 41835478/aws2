@@ -20,7 +20,7 @@ class CrontabController extends Controller
     {
         #先执行众筹订单静态分红
         $return = self::orderStatusMoney();
-        
+
         if ($return == "true") {
             self::LeaderTeamPrize();
         }
@@ -134,7 +134,7 @@ class CrontabController extends Controller
     public static function CalculatedAmount($userId,$users)
     {
         #查出用户的直推人数
-        $zhitui = DB::table('user')->where(['pid'=>$userId])->count();
+        $zhitui = DB::table('user')->where(['pid'=>$userId])->where('consumer_num','>',0)->count();
 
         if (!$zhitui) {
             return 'false';
@@ -164,7 +164,7 @@ class CrontabController extends Controller
 
         foreach ($generation as $k => $v) {
             #判断应该每层发多少钱,判断限额
-            $money = self::GradeGetMoney($v,$zhitui,$limitGrade,$newM);
+            $money = self::GradeGetMoney($k,$v,$zhitui,$limitGrade,$newM,$limitMoney);
             if ($money) {
                 $insertD[] = self::addDatas($userId,$k,$money);
             }
@@ -175,11 +175,11 @@ class CrontabController extends Controller
     }
 
     #根据等级和已发金额求出此等级应发金额
-    public static function GradeGetMoney($id,$zhitui,$limitGrade,$putAllMoney)
+    public static function GradeGetMoney($level,$id,$zhitui,$limitGrade,$putAllMoney,$limitMoney)
     {   
         $todayMoney = DB::table('investments2')->whereIn('user_id',$id)->sum('give_todaymoney');
-        $money = $todayMoney + $putAllMoney;
-
+        $todayMoney =  $todayMoney * ( $limitMoney[$level-1] / 100 );
+        $money = $putAllMoney  + $todayMoney;
         if ( 0< $zhitui &&  $zhitui<= $limitGrade[0] ) {
             if( $money > 1000){
                 return 1000 - $putAllMoney;

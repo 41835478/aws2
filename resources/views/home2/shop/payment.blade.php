@@ -216,6 +216,10 @@ $(".present_centt").on("click", function (){
 	});
 	$(".edit_save").click(function(){
 		var type = $('.icon-xuanzhong').prev().text();
+		if(!type){
+		    alert('请选择支付方式');
+		    return ;
+		}
 		if(type == '支付宝支付'){
 			var order_id = location.search.split('=')[1];
 			if(is_kingkr_obj()){
