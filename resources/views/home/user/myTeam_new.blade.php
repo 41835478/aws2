@@ -29,12 +29,13 @@
         background: linear-gradient(to right, #1d93ec , #0188ed); 
         border:0;
 	}
-	.teamNumber{padding:12px 0;}
+	.teamNumber{padding:0 0 12px;}
 	.teamnum-list{height:54px;line-height: 54px;padding:0 4.6875%;background-color:#fff;border-bottom:1px solid #f5f5f5;overflow:hidden;}
 	.teamnum-list img{display:block;float:left;width:25px;height:20px;margin-top:16px;}
 	.teamnum-list span{display:block;float:left;padding-left:15px;font-size:16px;}
 	.teamnum-list .icon-you{display:block;float:right;line-height: 56px;color:#999;}
 	.teamnum-list .div_right{font-size: 14px;color:#999;padding-right:10px;}
+	.teamNumber-num{height:45px;line-height:45px;font-size:16px;color:#333;padding:0 4.6875%;}
 </style>
 </head>
 <body>
@@ -46,11 +47,15 @@
 <div class="content" style="padding-top:48px;padding-bottom:0">
 	<div class="bonus">
 		<h2>
-			<em>{{$count}}</em>
+			<em>{{$teamMoney}}</em>
 		</h2>
-		<p>团队人数</p>
+		<p>团队业绩</p>
 	</div>
+
 	<div class="teamNumber">
+		<div class="teamNumber-num">
+			团队人数：{{$count}}人
+		</div>
 		<ul>
 			<li class="teamnum-list myPartner">
 				<img src="/home/images/huang01.png" alt="图标"/>

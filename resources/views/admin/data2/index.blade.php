@@ -57,7 +57,14 @@
                 <span class="font">众筹静态分红奖</span>
                 <p>{{$static}}元</p>
             </div>
-        </div> 
+        </div>
+        <div class="test" style="background-color:#73BF00;">
+            <div></div>
+            <div class="right">
+                <span class="font">股东分红</span>
+                <p>{{$shareholder}}元</p>
+            </div>
+        </div>
     </div>
 
 

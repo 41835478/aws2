@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Model\DistributionRecord2;
 use App\Http\Model\Goods2;
+use App\Http\Model\Investment2;
 use App\Http\Model\Order2;
 use App\Http\Model\Orderinfo2;
 use Illuminate\Http\Request;
@@ -1479,19 +1480,26 @@ try{
     public function myTeam_new()
     {   
         $user_id=$this->checkUser();
-        $count = count($this->child([$user_id],[]));   
+
+        $user_ids = $this->child([$user_id],[]);
+
+        $count = count($user_ids);
         if ($count) {
             $one = count($this->getChilden([$user_id],1));
             $two = count($this->getChilden([$user_id],2));
             $three = count($this->getChilden([$user_id],3));
             $other = $count - $one - $two - $three;
+            $teamMoney = Investment2::whereIn('user_id',$user_ids)->sum('money');
         }else{
             $one = 0;
             $two = 0;
             $three = 0;
             $other = 0;
+            $teamMoney =0;
         }
-        return view('home.user.myTeam_new',compact('one','two','three','other','count'));
+
+
+        return view('home.user.myTeam_new',compact('one','two','three','other','count','teamMoney'));
 
     }
 
