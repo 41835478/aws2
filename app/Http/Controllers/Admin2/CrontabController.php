@@ -10,6 +10,8 @@ use App\Http\Model\Order2 as Order;
 use App\Http\Model\User;
 use App\Http\Model\Config2;
 use App\Http\Model\Investment2;
+use App\Http\Model\BalanceRecord2;
+
 
 
 use Exception;
@@ -18,17 +20,42 @@ class CrontabController extends Controller
 {
     public static function action()
     {
+        set_time_limit(0);
+        // self::add();
         #先执行众筹订单静态分红
+        echo date('Y-m-d H:i:s').PHP_EOL;
         $return = self::orderStatusMoney();
+        echo date('Y-m-d H:i:s').PHP_EOL;
 
         if ($return == "true") {
-            self::LeaderTeamPrize();
-        }
+        echo date('Y-m-d H:i:s').PHP_EOL;
 
+            self::LeaderTeamPrize();
+        echo date('Y-m-d H:i:s').PHP_EOL;
+
+        }
+        #股东分红
         // self::Shareholder();
 
     }
 
+    public static function add()
+    {
+        $id = db::table('user')->where('pid','>',0)->pluck('id');
+
+        for ($i=0; $i < 200000 ; $i++) { 
+            $data = [];
+            $data['user_id'] = $id[rand(1,6661)];
+            $data['money'] = [100,200,500,30000][rand(0,3)] ;
+            $data['give_money'] = 0;
+            $data['give_allmoney'] = $data['money'] * (1 + ( ( Config2::getConfig(1) ) / 100 )  );
+            $data['order_id'] = 185267+$i;
+            $data['created_at'] = date('Y-m-d H:i:s',time());
+            $data['updated_at'] = date('Y-m-d H:i:s',time());
+
+            DB::table('investments2')->insert($data);
+        }
+    }
 
     #把众筹订单写入investments2表中
     // public function insertInvestments2($orderId)
@@ -56,7 +83,10 @@ class CrontabController extends Controller
 
     //     return 'true';
     // }
-
+    public static function log($name,$msg,$data)
+    {
+        file_put_contents("$name.txt","$msg"."------"."第".$data."次".date('Y-m-d H:i:s').PHP_EOL,FILE_APPEND );        
+    }
 
     #众筹订单静态分红
     protected static function orderStatusMoney()
@@ -70,18 +100,19 @@ class CrontabController extends Controller
         $time = time();
         $data = [];
         $editData = [];
+        $rebate = Config2::getConfig(3) / 100;
         #组合详情数组
         foreach ($orderInfo as $k => $v) {
             #修改发送金额
             $edit = [];
             $mm = 0;
             $edit['id'] = $v->id;
-            $money = $v->give_allmoney * ( Config2::getConfig(3) / 100 );
+            $money = $v->give_allmoney * $rebate;
             if ( ($money + $v->give_money) >= $v->give_allmoney ) {
+                $mm = $v->give_allmoney - $v->give_money;
                 $edit['status'] = 2;
                 $edit['give_money'] = $v->give_allmoney;
-                $edit['give_todaymoney'] = $v->give_allmoney - $v->give_money;
-                $mm = $v->give_allmoney - $v->give_money;
+                $edit['give_todaymoney'] = $mm;
             
             }else{
                 $edit['give_money'] = $v->give_money + $money;
@@ -98,15 +129,50 @@ class CrontabController extends Controller
         }
         DB::beginTransaction();
         try {
-            $model = new Investment2();
-            $return = $model->updateBatch($editData);
-            $return1= DB::table('balance_records2')->insert($data);
-            if ($return && $return1) {
-                DB::commit();
-                return "true";
+            #分割修改众筹订单数组--每组5000批量修改
+            $editnum = count($editData);
+            $editjie = (int)ceil($editnum / 4000);
+            $editstart = 0;
+            for ($e=1; $e <= $editjie ; $e++) { 
+                $shuliang = (int)ceil(($editnum - $editstart) / ($editjie - $e +1));
+                $EditData[$e-1] = array_slice($editData,$editstart,$shuliang);
+                $editstart += $shuliang;
+
             }
-            DB::rollback();
-            return "false";
+            $model = new Investment2();
+            foreach ($EditData as $key => $value) {
+                
+                $model->updateBatch($value);
+            }
+            unset($editnum);
+            unset($editjie);
+            unset($editstart);
+            unset($shuliang);
+            unset($EditData);
+            unset($editData);
+
+            #分割添加众筹静态分红--每组5000批量添加
+            $num = count($data);
+            $jie = (int)ceil($num / 4000);
+            $start = 0;
+            for ($i=1; $i <= $jie ; $i++) { 
+                $shuliang = (int)ceil(($num - $start) / ($jie - $i +1));
+                $add[$i-1] = array_slice($data,$start,$shuliang);
+                $start += $shuliang;
+            }
+            $model1 = new BalanceRecord2();
+            foreach ($add as $k => $v) {
+                $model1->insert($v);
+            }
+            unset($num);
+            unset($jie);
+            unset($start);
+            unset($shuliang);
+            unset($add);
+            unset($data);  
+                      
+            DB::commit();
+            return "true";
         } catch (Exception $e) {
             DB::rollback();
             //写错误日志
@@ -171,8 +237,31 @@ class CrontabController extends Controller
             $newM +=$money;
 
         }
-        DB::table('balance_records2')->insert($insertD);
+
+        DB::beginTransaction();
+        try {
+            $num = count($insertD);
+            $jie = (int)ceil($num / 4000);
+            $start = 0;
+            for ($i=1; $i <= $jie ; $i++) { 
+                $shuliang = (int)ceil(($num - $start) / ($jie - $i +1));
+                $insert[$i-1] = array_slice($insertD,$start,$shuliang);
+                $start += $shuliang;
+            }
+            $model = new BalanceRecord2();
+            foreach ($insert as $k => $v) {
+                $model->insert($v);
+            }
+            Db::commit();
+            return "true";
+        } catch (Exception $e) {
+            DB::rollback();
+            //写错误日志
+            file_put_contents("teamMoney.txt","团队奖"."------".$e->getMessage()."---".date('Y-m-d H:i:s').PHP_EOL,FILE_APPEND );
+            return "false";
+        }
     }
+
 
     #根据等级和已发金额求出此等级应发金额
     public static function GradeGetMoney($level,$id,$zhitui,$limitGrade,$putAllMoney,$limitMoney)
@@ -193,8 +282,8 @@ class CrontabController extends Controller
                 return $todayMoney;
             }
         }else if ( $limitGrade[1]< $zhitui &&  $zhitui <= $limitGrade[2] ) {
-            if( $money > 4000){
-                return 4000 - $putAllMoney;
+            if( $money > 3000){
+                return 3000 - $putAllMoney;
             }else{
                 return $todayMoney;
             }
@@ -440,22 +529,4 @@ class CrontabController extends Controller
         }
         return $users_id;
     }
-
-    // public static function add()
-    // {
-    //     $id = db::table('user')->where('pid','>',0)->pluck('id');
-
-    //     for ($i=0; $i < 10000 ; $i++) { 
-    //         $data = [];
-    //         $data['user_id'] = $id[rand(1,6000)];
-    //         $data['money'] = [100,200,500,30000][rand(0,3)] ;
-    //         $data['give_money'] = 0;
-    //         $data['give_allmoney'] = $data['money'] * (1 + ( ( Config2::getConfig(1) ) / 100 )  );
-    //         $data['order_id'] = $i+1;
-    //         $data['created_at'] = date('Y-m-d H:i:s',time());
-    //         $data['updated_at'] = date('Y-m-d H:i:s',time());
-
-    //         DB::table('investments2')->insert($data);
-    //     }
-    // }
 }
