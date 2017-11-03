@@ -42,9 +42,11 @@ class DataController extends Controller
 
         $orderMoney = DB::table('investments2')->sum('money');
         // 众筹股东分红
+        $shareholder = DB::table('balance_records2')->where('type',5)->where('is_add',1)->sum('num');
+
         // 众筹累计收入
         // 众筹累计分红金额
-        return view('admin.data2.index',compact('orders','lingdao','fenxiao','static','orderMoney'));
+        return view('admin.data2.index',compact('orders','lingdao','fenxiao','static','orderMoney','shareholder'));
     }
 
     public function configindex()
