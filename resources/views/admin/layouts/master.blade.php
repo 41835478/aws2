@@ -100,6 +100,14 @@
                     </ul>
 
                 </li>
+                <li>
+                    <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">用户管理</span><span
+                                class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="{{url('admin2/users/index')}}">用户列表</a>
+                    </ul>
+
+                </li>
                 <li class="line dk"></li>
                 <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                     <span class="ng-scope">用户专区</span>

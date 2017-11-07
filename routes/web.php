@@ -53,6 +53,7 @@ Route::group(['namespace' => 'Admin2','middleware'=>'admin'], function () {
     require_once base_path('routes/admin2/goods.php');//商品管理
     require_once base_path('routes/admin2/order.php');
     require_once base_path('routes/admin2/Data.php');
+    require_once base_path('routes/admin2/users.php');
 
 
 });

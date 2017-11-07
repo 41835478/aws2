@@ -375,6 +375,7 @@ class MemberController extends Controller
         $date['pid'] = $pid;
         $date['phone'] = $phone;
         $date['login_name'] = $login_name;
+        $date['name'] = $login_name;
         $date['pwd'] = md5(123456);
         $date['paypwd'] = md5(123456);
         $date['create_at'] = time();
