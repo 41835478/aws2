@@ -109,6 +109,7 @@
                         <th>众筹分销奖金</th>
                         <th>众筹领导奖</th>
                         <th>股东分红</th>
+                        <th>团队业绩</th>
                     </tr>
                     </thead>
                     <tbody>
